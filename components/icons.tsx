@@ -212,3 +212,37 @@ export function MyAnimeListIcon({ size = 18 }: { size?: number }) {
     </svg>
   );
 }
+
+export function MenuIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      strokeLinecap="round"
+    >
+      <path d="M3.5 7h17M3.5 12h17M3.5 17h17" />
+    </svg>
+  );
+}
+
+export function CloseIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      strokeLinecap="round"
+    >
+      <path d="M5.5 5.5l13 13M18.5 5.5l-13 13" />
+    </svg>
+  );
+}
