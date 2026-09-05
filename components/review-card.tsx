@@ -13,6 +13,7 @@ export default function ReviewCard({ review }: { review: Review }) {
       <Cover
         title={review.title}
         genre={review.genre}
+        cover={review.cover}
         className="w-[76px] flex-none sm:w-full"
         letterClassName="text-[34px] sm:text-[72px] xl:text-[92px]"
       />
@@ -20,25 +21,27 @@ export default function ReviewCard({ review }: { review: Review }) {
       <div className="flex min-w-0 flex-1 flex-col gap-[6px] sm:gap-[9px]">
         <div className="flex items-center justify-between gap-3">
           <GenreTag genre={review.genre} />
-          <span className="text-[11px] whitespace-nowrap text-fg-faint">
+          <span className="text-xs whitespace-nowrap text-fg-faint">
             {formatDate(review.date)}
           </span>
         </div>
 
-        <h3 className="truncate font-serif text-[16px] leading-[1.3] font-medium text-fg-title transition-colors group-hover:text-accent sm:line-clamp-2 sm:text-[19px] sm:whitespace-normal">
+        <h3 className="truncate font-serif text-base leading-[1.3] font-medium text-fg-title transition-colors group-hover:text-accent sm:line-clamp-2 sm:whitespace-normal">
           {review.title}
         </h3>
 
-        <span className="truncate text-[12px] text-fg-muted sm:text-[13px]">
+        <span className="truncate text-xs text-fg-muted sm:text-sm">
           {review.subject}
         </span>
 
-        <div className="mt-px">
-          <Stars rating={review.rating} />
-        </div>
+        {review.rating ? (
+          <div className="mt-px">
+            <Stars rating={review.rating} />
+          </div>
+        ) : null}
 
         <div className="hidden sm:block">
-          <p className="mt-[5px] line-clamp-2 font-serif text-[13px] leading-[1.55] text-fg-excerpt italic">
+          <p className="mt-[5px] line-clamp-2 font-serif text-sm leading-[1.55] text-fg-excerpt italic">
             {review.excerpt}
           </p>
         </div>
