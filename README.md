@@ -20,7 +20,7 @@ Then open:
 
 | URL          | What it is                                                  |
 | ------------ | ----------------------------------------------------------- |
-| `/`          | Cinematic landing page (scroll-through intro)               |
+| `/`          | Landing page — hero, genre split, genre shelves, quote, CTA |
 | `/reviews`   | The index — review grid with genre / rating filters and sort |
 | `/reviews/…` | An individual review                                        |
 | `/about`     | About page                                                  |
@@ -117,7 +117,13 @@ above.
   motion is disabled under `prefers-reduced-motion`.
 - Filtering and sorting on `/reviews` happens client-side: the page loads every
   review server-side and hands the list to a client component that filters and
-  sorts in state. No API route involved.
+  sorts in state. No API route involved. `/reviews?genre=film` (or `books` /
+  `anime`) opens the index with that pill preselected — the landing page's
+  "Browse all …" links use it — so `/reviews` renders per request rather than
+  as a static page.
+- The landing page's genre panels are plain in-page anchors
+  (`#books-shelf` etc.) to the matching shelf section; the smooth easing is CSS
+  `scroll-behavior`, with no JavaScript involved.
 
 ## Project layout
 

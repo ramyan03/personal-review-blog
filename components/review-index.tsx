@@ -22,8 +22,14 @@ const RATINGS: { value: number; label: string }[] = [
   { value: 5, label: "5 only" },
 ];
 
-export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
-  const [genre, setGenre] = useState<GenreFilter>("All");
+export default function ReviewIndex({
+  reviews,
+  initialGenre = "All",
+}: {
+  reviews: Review[];
+  initialGenre?: GenreFilter;
+}) {
+  const [genre, setGenre] = useState<GenreFilter>(initialGenre);
   const [minRating, setMinRating] = useState(0);
   const [sort, setSort] = useState<Sort>("newest");
 

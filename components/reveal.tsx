@@ -31,7 +31,9 @@ export default function Reveal({
           }
         }
       },
-      { threshold: 0.2 },
+      // Fires as soon as the top edge clears the fold, so it works for panels
+      // taller than the viewport as well as small ones.
+      { threshold: 0, rootMargin: "0px 0px -80px 0px" },
     );
 
     observer.observe(node);

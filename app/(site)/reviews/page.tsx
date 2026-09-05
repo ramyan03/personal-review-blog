@@ -1,13 +1,24 @@
 import type { Metadata } from "next";
 import ReviewIndex from "@/components/review-index";
+import { GENRES } from "@/lib/genre";
 import { getReviews } from "@/lib/reviews";
 
 export const metadata: Metadata = {
   title: "Index",
 };
 
-export default async function ReviewsPage() {
+export default async function ReviewsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ genre?: string }>;
+}) {
+  const { genre } = await searchParams;
   const reviews = await getReviews();
+
+  // `/reviews?genre=film` opens the index with that pill already selected.
+  const initialGenre =
+    GENRES.find((option) => option.toLowerCase() === genre?.toLowerCase()) ??
+    "All";
 
   return (
     <main className="pb-20 lg:pb-[120px]">
@@ -17,7 +28,7 @@ export default async function ReviewsPage() {
           scorecard.
         </p>
       </div>
-      <ReviewIndex reviews={reviews} />
+      <ReviewIndex reviews={reviews} initialGenre={initialGenre} />
     </main>
   );
 }

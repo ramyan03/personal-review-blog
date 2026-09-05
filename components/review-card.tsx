@@ -1,29 +1,21 @@
 import Link from "next/link";
+import Cover from "@/components/cover";
 import GenreTag from "@/components/genre-tag";
 import Stars from "@/components/stars";
-import { genreTheme } from "@/lib/genre";
 import { formatDate, type Review } from "@/lib/format";
 
 export default function ReviewCard({ review }: { review: Review }) {
-  const theme = genreTheme(review.genre);
-
   return (
     <Link
       href={`/reviews/${review.slug}`}
       className="group flex gap-4 border-b border-row py-5 sm:flex-col sm:gap-4 sm:border-0 sm:py-0"
     >
-      <div
-        className="flex w-[76px] flex-none items-center justify-center overflow-hidden rounded-[3px] sm:w-full"
-        style={{ aspectRatio: "3 / 4", background: theme.posterBg }}
-      >
-        <span
-          className="font-serif text-[34px] leading-none font-medium italic opacity-85 sm:text-[72px] xl:text-[92px]"
-          style={{ color: theme.letterColor }}
-          aria-hidden="true"
-        >
-          {review.title.charAt(0)}
-        </span>
-      </div>
+      <Cover
+        title={review.title}
+        genre={review.genre}
+        className="w-[76px] flex-none sm:w-full"
+        letterClassName="text-[34px] sm:text-[72px] xl:text-[92px]"
+      />
 
       <div className="flex min-w-0 flex-1 flex-col gap-[6px] sm:gap-[9px]">
         <div className="flex items-center justify-between gap-3">
