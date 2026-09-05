@@ -3,14 +3,29 @@ import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { fontVariables } from "@/lib/fonts";
 import { getReviews } from "@/lib/reviews";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import "../globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Ramyan Reviews",
-    template: "%s · Ramyan Reviews",
+    default: SITE_NAME,
+    template: "%s · " + SITE_NAME,
   },
-  description: "Reviews of the books, films, and anime I finish.",
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    locale: "en_CA",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 /**

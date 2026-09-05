@@ -1,11 +1,27 @@
 import type { Metadata } from "next";
 import { fontVariables } from "@/lib/fonts";
 import { THEME_SCRIPT } from "@/lib/theme";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import "../globals.css";
 
 export const metadata: Metadata = {
-  title: "Ramyan Reviews",
-  description: "Reviews of the books, films, and anime I finish.",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_NAME,
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    locale: "en_CA",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function LandingLayout({

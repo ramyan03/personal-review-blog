@@ -25,6 +25,22 @@ export default function HashTarget() {
     if (!id) return;
 
     const html = document.documentElement;
+
+    /*
+     * Coming back from a review, the browser has already restored the scroll
+     * position, so re-running the alignment fights it and you see the page
+     * settle twice. Arriving fresh at /#all-reviews the page is at the top and
+     * the index is five screens down, so the gap is enormous. Half a viewport
+     * separates the two cases cleanly.
+     */
+    const landing = document.getElementById(id);
+    if (
+      landing &&
+      Math.abs(landing.getBoundingClientRect().top) < window.innerHeight / 2
+    ) {
+      return;
+    }
+
     let stopped = false;
 
     function cleanup() {

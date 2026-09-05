@@ -11,6 +11,7 @@ import { reader } from "@/lib/reader";
 import { byline, formatDate } from "@/lib/format";
 import { getReview, getReviews } from "@/lib/reviews";
 import { REVIEWS_HREF } from "@/lib/links";
+import { SITE_NAME } from "@/lib/site";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -23,7 +24,35 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const review = await getReview(slug);
   if (!review) return {};
-  return { title: review.title, description: review.excerpt };
+
+  /*
+   * Shared into a feed, a review should preview as itself: its own artwork and
+   * its own opening line. Without this every link on the site produced the
+   * same generic card, which is what a link with nothing behind it looks like.
+   */
+  const description = review.excerpt;
+
+  // No images here on purpose: opengraph-image.tsx in this folder composes the
+  // card, and setting images explicitly would override it with the bare cover.
+  return {
+    title: review.title,
+    description,
+    alternates: { canonical: "/reviews/" + slug },
+    openGraph: {
+      type: "article",
+      siteName: SITE_NAME,
+      title: review.title,
+      description,
+      url: "/reviews/" + slug,
+      publishedTime: review.date || undefined,
+      authors: ["Ramyan Chelva"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: review.title,
+      description,
+    },
+  };
 }
 
 export default async function ReviewPage({ params }: Params) {

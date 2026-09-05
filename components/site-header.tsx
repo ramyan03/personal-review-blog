@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useLayoutEffect, useState } from "react";
 import ThemeToggle from "@/components/theme-toggle";
 import HeaderSearch from "@/components/header-search";
 import type { Review } from "@/lib/format";
@@ -15,6 +15,11 @@ import { useSlidingRule } from "@/lib/use-sliding-rule";
  * still lives under /reviews/<slug>, so the tab lights up there even though
  * following it goes to /#all-reviews.
  */
+/* useLayoutEffect warns when it runs during server rendering, and this file is
+   a client component that still gets prerendered. */
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 const NAV = [
   { href: REVIEWS_HREF, label: "Reviews", match: "/reviews" },
   { href: "/about", label: "About", match: "/about" },
@@ -42,13 +47,31 @@ export default function SiteHeader({
   const rule = useSlidingRule<HTMLAnchorElement>(activeIndex);
 
   const [revealed, setRevealed] = useState(!floating);
+  // The fade is for scrolling away from the hero, not for arriving. Coming
+  // back to this page already scrolled down, an animated fade in is a flash.
+  const [animate, setAnimate] = useState(false);
+
+  /*
+   * Runs before paint. On a back navigation the browser restores the scroll
+   * position, so the bar should already be showing on the first frame; with a
+   * plain effect it painted once at opacity 0 and then faded in, which is the
+   * flicker you get swiping back to the reviews.
+   */
+  useIsomorphicLayoutEffect(() => {
+    if (!floating) return;
+    setRevealed(window.scrollY > 80);
+  }, [floating]);
 
   useEffect(() => {
     if (!floating) return;
     const onScroll = () => setRevealed(window.scrollY > 80);
     onScroll();
+    const id = requestAnimationFrame(() => setAnimate(true));
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      cancelAnimationFrame(id);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, [floating]);
 
   return (
@@ -66,7 +89,7 @@ export default function SiteHeader({
     <header
       className={`z-20 border-b border-rule bg-ink/85 backdrop-blur-[10px] ${
         floating
-          ? "fixed inset-x-0 top-0 transition-[opacity,transform] duration-500"
+          ? `fixed inset-x-0 top-0 ${animate ? "transition-[opacity,transform] duration-500" : ""}`
           : "sticky top-0"
       }`}
       style={
@@ -82,7 +105,7 @@ export default function SiteHeader({
       <div className="mx-auto flex w-full max-w-[1420px] flex-wrap items-center gap-x-5 gap-y-4 px-5 py-[18px] sm:min-h-[29px] sm:gap-x-6 sm:px-10 lg:px-[72px]">
         <Link
           href="/"
-          className="flex-none font-serif text-base font-medium text-fg-title italic transition-colors hover:text-accent"
+          className="flex-none font-serif text-sm leading-none font-medium text-fg-title italic transition-colors hover:text-accent sm:text-base"
         >
           Ramyan Reviews
         </Link>
