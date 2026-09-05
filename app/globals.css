@@ -1,0 +1,214 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: oklch(0.17 0.008 55);
+  --color-surface: oklch(0.21 0.01 55);
+  --color-rule: oklch(0.3 0.01 55);
+  --color-hairline: oklch(0.32 0.01 55);
+  --color-row: oklch(0.26 0.01 55);
+
+  --color-fg: oklch(0.93 0.006 55);
+  --color-fg-bright: oklch(0.96 0.006 55);
+  --color-fg-title: oklch(0.94 0.006 55);
+  --color-fg-body: oklch(0.86 0.006 55);
+  --color-fg-quote: oklch(0.72 0.01 55);
+  --color-fg-muted: oklch(0.65 0.01 55);
+  --color-fg-soft: oklch(0.6 0.01 55);
+  --color-fg-excerpt: oklch(0.56 0.01 55);
+  --color-fg-faint: oklch(0.52 0.01 55);
+  --color-fg-dim: oklch(0.5 0.01 55);
+  --color-star-empty: oklch(0.42 0.01 55);
+
+  --color-accent: #c9a15a;
+
+  --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-work-sans), system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+/* --- Landing page --- */
+
+.landing-scroll {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+}
+
+.landing-scroll .panel {
+  scroll-snap-align: start;
+}
+
+/* Scroll reveal is driven by an IntersectionObserver toggling .is-visible. */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-delay-2 {
+  transition-delay: 0.08s;
+}
+
+.reveal-delay-3 {
+  transition-delay: 0.16s;
+}
+
+@keyframes scroll-cue-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+
+.scroll-cue {
+  animation: scroll-cue-bounce 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-scroll {
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .scroll-cue {
+    animation: none;
+  }
+}
+
+/* --- Review body (rendered from the Keystatic document field) --- */
+
+.review-body {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  line-height: 1.75;
+  color: var(--color-fg-body);
+}
+
+.review-body > p {
+  margin: 0 0 28px;
+}
+
+.review-body > p:last-child {
+  margin-bottom: 0;
+}
+
+/* Oversized accent drop cap on the opening paragraph. */
+.review-body > p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 66px;
+  line-height: 0.78;
+  padding: 6px 10px 0 0;
+  color: var(--color-accent);
+}
+
+.review-body h1,
+.review-body h2,
+.review-body h3 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  color: var(--color-fg-bright);
+  line-height: 1.25;
+  margin: 44px 0 16px;
+}
+
+.review-body h1 {
+  font-size: 30px;
+}
+
+.review-body h2 {
+  font-size: 25px;
+}
+
+.review-body h3 {
+  font-size: 21px;
+}
+
+/* Pull-quote treatment: centered and italic, deliberately without a left rule. */
+.review-body blockquote {
+  margin: 44px auto;
+  max-width: 520px;
+  padding: 0;
+  border: 0;
+  font-style: italic;
+  font-size: 21px;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--color-fg-quote);
+}
+
+.review-body blockquote p {
+  margin: 0;
+}
+
+.review-body ul,
+.review-body ol {
+  margin: 0 0 28px;
+  padding-left: 1.35em;
+}
+
+.review-body ul {
+  list-style: disc;
+}
+
+.review-body ol {
+  list-style: decimal;
+}
+
+.review-body li {
+  margin-bottom: 8px;
+}
+
+.review-body hr {
+  border: 0;
+  border-top: 1px solid var(--color-rule);
+  margin: 44px 0;
+}
+
+.review-body a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.review-body code {
+  font-size: 0.85em;
+  background: var(--color-surface);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+/* The About page reuses the body typography without the drop cap. */
+.plain-body > p:first-of-type::first-letter {
+  float: none;
+  font-size: inherit;
+  line-height: inherit;
+  padding: 0;
+  color: inherit;
+  font-weight: inherit;
+}
