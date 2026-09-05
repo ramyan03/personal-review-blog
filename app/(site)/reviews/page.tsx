@@ -1,34 +1,34 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import ReviewIndex from "@/components/review-index";
-import { GENRES } from "@/lib/genre";
 import { getReviews } from "@/lib/reviews";
 
 export const metadata: Metadata = {
-  title: "Index",
+  title: "Reviews",
 };
 
-export default async function ReviewsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ genre?: string }>;
-}) {
-  const { genre } = await searchParams;
+export default async function ReviewsPage() {
   const reviews = await getReviews();
-
-  // `/reviews?genre=film` opens the index with that pill already selected.
-  const initialGenre =
-    GENRES.find((option) => option.toLowerCase() === genre?.toLowerCase()) ??
-    "All";
 
   return (
     <main className="pb-20 lg:pb-[120px]">
       <div className="px-5 pt-1 pb-5 sm:px-10 lg:px-[72px] lg:pb-2">
-        <p className="max-w-[560px] font-serif text-[15px] leading-[1.5] text-fg-muted italic lg:text-[18px]">
-          Notes on books, films, and anime — kept like a reading log, not a
-          scorecard.
+        <h1 className="m-0 font-serif text-xl leading-[1.15] font-medium tracking-[-0.01em] text-fg-bright lg:text-2xl">
+          Reviews
+        </h1>
+        <p className="mt-3 max-w-[560px] font-serif text-base leading-[1.5] text-fg-muted lg:text-lg">
+          Everything so far. Search, filter by genre or rating, or change the
+          order.
         </p>
       </div>
-      <ReviewIndex reviews={reviews} initialGenre={initialGenre} />
+      {/*
+       * The genre and search term live in the query string and are read on the
+       * client, so this page prerenders as static HTML and still responds to
+       * /reviews?genre=film or /reviews?q=kon.
+       */}
+      <Suspense fallback={null}>
+        <ReviewIndex reviews={reviews} />
+      </Suspense>
     </main>
   );
 }

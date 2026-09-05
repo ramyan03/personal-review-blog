@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DocumentRenderer } from "@keystatic/core/renderer";
 import GenreTag from "@/components/genre-tag";
-import Stars from "@/components/stars";
+import Stars, { formatRating } from "@/components/stars";
 import { ArrowLeftIcon } from "@/components/icons";
 import { reader } from "@/lib/reader";
 import { byline, formatDate } from "@/lib/format";
@@ -37,36 +37,42 @@ export default async function ReviewPage({ params }: Params) {
     <main className="mx-auto max-w-[680px] px-5 pt-8 pb-24 sm:px-6 lg:pt-12 lg:pb-[140px]">
       <Link
         href="/reviews"
-        className="mb-10 inline-flex items-center gap-2 text-[12px] tracking-[0.1em] text-fg-soft uppercase transition-colors hover:text-fg lg:mb-14"
+        className="mb-10 inline-flex items-center gap-2 text-xs tracking-[0.1em] text-fg-soft uppercase transition-colors hover:text-fg lg:mb-14"
       >
         <ArrowLeftIcon />
-        Back to Index
+        All reviews
       </Link>
 
       <div className="mb-[22px] flex items-center gap-[14px]">
         <GenreTag genre={review.genre} size="md" />
-        <span className="text-[12px] text-fg-faint">
+        <span className="text-xs text-fg-faint">
           {formatDate(review.date)}
         </span>
       </div>
 
-      <h1 className="mb-4 font-serif text-[32px] leading-[1.15] font-medium tracking-[-0.01em] text-fg-bright sm:text-[38px] lg:text-[44px]">
+      <h1 className="mb-4 font-serif text-xl leading-[1.15] font-medium tracking-[-0.01em] text-fg-bright lg:text-2xl">
         {review.title}
       </h1>
-      <p className="mb-8 font-serif text-[17px] text-[oklch(0.63_0.01_55)] italic lg:text-[19px]">
+      <p className="mb-8 font-serif text-base text-fg-quote italic lg:text-lg">
         {byline(review)}
       </p>
 
-      <div className="mb-11 flex items-center gap-[14px] border-b border-rule pb-9">
-        <Stars rating={review.rating} size={18} />
-        <span className="text-[13px] text-fg-faint">{review.rating} / 5</span>
-      </div>
+      {review.rating ? (
+        <div className="mb-11 flex items-center gap-[14px] border-b border-rule pb-9">
+          <Stars rating={review.rating} size={18} />
+          <span className="text-sm text-fg-faint">
+            {formatRating(review.rating)} / 5
+          </span>
+        </div>
+      ) : (
+        <div className="mb-11 border-b border-rule pb-9" />
+      )}
 
       <article className="review-body">
         <DocumentRenderer document={review.body} />
       </article>
 
-      <nav className="mt-[72px] flex items-center justify-between gap-6 border-t border-rule pt-8 text-[13px] text-fg-soft">
+      <nav className="mt-[72px] flex items-center justify-between gap-6 border-t border-rule pt-8 text-sm text-fg-soft">
         {newer ? (
           <Link
             href={`/reviews/${newer.slug}`}

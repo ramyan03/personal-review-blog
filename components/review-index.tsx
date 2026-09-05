@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import ReviewCard from "@/components/review-card";
 import { ChevronDownIcon } from "@/components/icons";
 import { GENRES, type Genre } from "@/lib/genre";
@@ -19,35 +20,56 @@ const RATINGS: { value: number; label: string }[] = [
   { value: 0, label: "Any" },
   { value: 3, label: "3 & up" },
   { value: 4, label: "4 & up" },
+  { value: 4.5, label: "4.5 & up" },
   { value: 5, label: "5 only" },
 ];
 
-export default function ReviewIndex({
-  reviews,
-  initialGenre = "All",
-}: {
-  reviews: Review[];
-  initialGenre?: GenreFilter;
-}) {
-  const [genre, setGenre] = useState<GenreFilter>(initialGenre);
+export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
+  // Genre and the search term come from the URL, which is what lets this page
+  // stay static: nothing is resolved on the server.
+  const params = useSearchParams();
+  const [genre, setGenre] = useState<GenreFilter>("All");
+  const [query, setQuery] = useState("");
   const [minRating, setMinRating] = useState(0);
   const [sort, setSort] = useState<Sort>("newest");
 
+  useEffect(() => {
+    const wanted = params.get("genre");
+    setGenre(
+      GENRES.find((option) => option.toLowerCase() === wanted?.toLowerCase()) ??
+        "All",
+    );
+    setQuery(params.get("q") ?? "");
+  }, [params]);
+
+  // The rating controls only make sense once something carries a rating.
+  const anyRated = useMemo(
+    () => reviews.some((review) => review.rating != null),
+    [reviews],
+  );
+
   const visible = useMemo(() => {
+    const needle = query.trim().toLowerCase();
     const filtered = reviews.filter(
       (review) =>
         (genre === "All" || review.genre === genre) &&
-        review.rating >= minRating,
+        (minRating === 0 || (review.rating ?? 0) >= minRating) &&
+        (needle === "" ||
+          review.title.toLowerCase().includes(needle) ||
+          review.subject.toLowerCase().includes(needle) ||
+          review.excerpt.toLowerCase().includes(needle)),
     );
 
     return filtered.sort((a, b) => {
       if (sort === "rating") {
-        return b.rating - a.rating || b.date.localeCompare(a.date);
+        return (
+          (b.rating ?? 0) - (a.rating ?? 0) || b.date.localeCompare(a.date)
+        );
       }
       if (sort === "oldest") return a.date.localeCompare(b.date);
       return b.date.localeCompare(a.date);
     });
-  }, [reviews, genre, minRating, sort]);
+  }, [reviews, genre, query, minRating, sort]);
 
   return (
     <>
@@ -61,19 +83,19 @@ export default function ReviewIndex({
                 type="button"
                 onClick={() => setGenre(option)}
                 aria-pressed={active}
-                className="flex-none cursor-pointer rounded-full border px-4 py-2 text-[11px] font-semibold tracking-[0.08em] uppercase transition-colors lg:px-[18px] lg:py-[9px] lg:text-[12px]"
+                className="flex-none cursor-pointer rounded-full border px-4 py-2 text-xs font-semibold tracking-[0.08em] uppercase transition-colors lg:px-[18px] lg:py-[9px]"
                 style={
                   active
                     ? {
                         borderColor: "var(--color-accent)",
                         background:
-                          "color-mix(in srgb, var(--color-accent) 18%, oklch(0.21 0.01 55))",
-                        color: "oklch(0.97 0.006 55)",
+                          "color-mix(in srgb, var(--color-accent) 16%, transparent)",
+                        color: "var(--color-fg-bright)",
                       }
                     : {
-                        borderColor: "oklch(0.32 0.01 55)",
+                        borderColor: "var(--color-hairline)",
                         background: "transparent",
-                        color: "oklch(0.68 0.01 55)",
+                        color: "var(--color-fg-muted)",
                       }
                 }
               >
@@ -84,33 +106,38 @@ export default function ReviewIndex({
         </div>
 
         <div className="flex items-center gap-5 lg:gap-6">
-          <SelectControl
-            label="Rating"
-            value={String(minRating)}
-            onChange={(value) => setMinRating(Number(value))}
-            options={RATINGS.map((r) => ({
-              value: String(r.value),
-              label: r.label,
-            }))}
-          />
-          <div className="h-4 w-px bg-hairline" />
+          {anyRated ? (
+            <>
+              <SelectControl
+                label="Rating"
+                value={String(minRating)}
+                onChange={(value) => setMinRating(Number(value))}
+                options={RATINGS.map((r) => ({
+                  value: String(r.value),
+                  label: r.label,
+                }))}
+              />
+              <div className="h-4 w-px bg-hairline" />
+            </>
+          ) : null}
           <SelectControl
             label="Sort"
             value={sort}
             onChange={(value) => setSort(value as Sort)}
-            options={SORTS}
+            options={anyRated ? SORTS : SORTS.filter((s) => s.value !== "rating")}
           />
         </div>
       </div>
 
       <div className="px-5 sm:px-10 lg:px-[72px]">
-        <div className="pt-7 pb-2 text-[12px] tracking-[0.08em] text-fg-dim uppercase sm:pb-0">
+        <div className="pt-7 pb-2 text-xs tracking-[0.08em] text-fg-dim uppercase sm:pb-0">
           {visible.length} {visible.length === 1 ? "review" : "reviews"}
+          {query.trim() ? ` matching "${query.trim()}"` : ""}
         </div>
 
         {visible.length === 0 ? (
-          <p className="py-16 font-serif text-[19px] text-fg-muted italic">
-            Nothing filed under that combination yet.
+          <p className="py-16 font-serif text-lg text-fg-muted">
+            No reviews match{query.trim() ? ` "${query.trim()}"` : " those filters"}.
           </p>
         ) : (
           <div className="grid grid-cols-1 sm:mt-8 sm:grid-cols-2 sm:gap-x-7 sm:gap-y-11 md:grid-cols-3 xl:grid-cols-4">
@@ -138,10 +165,10 @@ function SelectControl({
   const current = options.find((option) => option.value === value);
 
   return (
-    <label className="flex items-center gap-2 text-[12px] tracking-[0.06em] text-fg-muted uppercase">
+    <label className="flex items-center gap-2 text-xs tracking-[0.06em] text-fg-muted uppercase">
       <span>{label}</span>
       <span className="relative inline-flex items-center gap-2">
-        <span className="text-[12px] font-semibold tracking-normal text-[oklch(0.92_0.006_55)] normal-case">
+        <span className="text-xs font-semibold tracking-normal text-fg-bright normal-case">
           {current?.label ?? ""}
         </span>
         <ChevronDownIcon />
