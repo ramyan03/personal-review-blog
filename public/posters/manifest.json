@@ -146,5 +146,82 @@
     "source": "tmdb",
     "sourceUrl": "https://www.themoviedb.org/movie/1013850",
     "bytes": 58902
+  },
+  {
+    "slug": "the-picture-of-dorian-gray",
+    "file": "the-picture-of-dorian-gray-1.jpg",
+    "kind": "body",
+    "source": "wikimedia",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Oscar_Wilde_by_Napoleon_Sarony._Three-quarter-length_photograph,_seated.jpg",
+    "width": 543,
+    "height": 900,
+    "bytes": 72133,
+    "note": "Licence: public domain (US Library of Congress, Prints & Photographs Division, digital ID ppmsca.07757). Napoleon Sarony's 1882 studio portrait of Oscar Wilde, New York -- genuine period portraiture of the author in the fur-collared coat and languid pose that became shorthand for the aestheticism/dandyism the novel is about, not a book cover. Source photo is 2502x4146; downscaled to 900px on the long edge, native aspect ratio kept, no cropping or padding."
+  },
+  {
+    "slug": "the-picture-of-dorian-gray",
+    "file": "the-picture-of-dorian-gray-2.jpg",
+    "kind": "body",
+    "source": "wikimedia",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:From_The_Picture_of_Dorian_Gray_by_Eug%C3%A8ne_D%C3%A9t%C3%A9_after_Thiriat.png",
+    "width": 659,
+    "height": 900,
+    "bytes": 188163,
+    "note": "Licence: public domain (PD-old, pre-1923). Wood engraving by Eugene Dete after Paul Thiriat, one of seven illustrations from the 1908 Charles Carrington (Paris) illustrated French edition of the novel -- depicts the book's climactic scene, Dorian dead on the floor beneath the now-restored portrait. Genuine narrative illustration of the story itself, not a cover. Source scan is 734x1002; downscaled to 900px on the long edge, native aspect ratio kept, no cropping or padding."
+  },
+  {
+    "slug": "the-bell-jar",
+    "file": "the-bell-jar-1.jpg",
+    "kind": "body",
+    "source": "wikimedia",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Bell_Jar_illustration_-_The_Cincinnati_Post_(1971).jpg",
+    "width": 639,
+    "height": 900,
+    "bytes": 138704,
+    "note": "Editorial illustration that ran in The Cincinnati Post on June 12, 1971, accompanying a review of the novel -- a genuine period drawing of the book's central image, not a cover. Licence relies on the Commons file page's licence tag, {{PD-US-pre1978}} (published in the US before 1978 without a copyright notice); no further qualification, dispute, or caveat is noted on that file page as of this writing, and it has no talk page. Source scan is 2499x3519; downscaled to 900px on the long edge, native aspect ratio kept, no cropping or padding."
+  },
+  {
+    "slug": "the-bell-jar",
+    "file": "the-bell-jar-2.jpg",
+    "kind": "body",
+    "source": "openlibrary",
+    "sourceUrl": "https://covers.openlibrary.org/b/id/8773331-L.jpg",
+    "width": 317,
+    "height": 500,
+    "bytes": 41305,
+    "note": "Edition: Faber & Faber 50th Anniversary Edition, 2013. Saved at native resolution, no upscaling. Checked all 26 distinct OpenLibrary cover scans for this work (every edition, every publisher, including other Faber printings) and none exceeds ~500px on the long edge, so this is the largest available."
+  },
+  {
+    "slug": "the-end-of-evangelion",
+    "file": "the-end-of-evangelion-1.jpg",
+    "kind": "body",
+    "source": "tmdb",
+    "sourceUrl": "https://image.tmdb.org/t/p/w1280/nwSyFnZORd5ptu0RClAMgsF5dkE.jpg",
+    "width": 900,
+    "height": 506,
+    "bytes": 118973,
+    "note": "The final beach scene: Shinji and Asuka stand on the shore facing the giant severed head of Rei/Lilith looming over the horizon at dusk. Copyrighted film still, used under fair dealing for criticism and review, same basis as the other 21 posters on the site."
+  },
+  {
+    "slug": "the-end-of-evangelion",
+    "file": "the-end-of-evangelion-2.jpg",
+    "kind": "body",
+    "source": "tmdb",
+    "sourceUrl": "https://image.tmdb.org/t/p/w1280/5ClI2ZgU7gwhZGpSwU95nUFxf1A.jpg",
+    "width": 900,
+    "height": 506,
+    "bytes": 126997,
+    "note": "Instrumentality/Third Impact imagery: Rei, seen from behind, haloed by concentric red rings and golden wings above a churning fiery ground. Copyrighted film still, used under fair dealing for criticism and review, same basis as the other 21 posters on the site."
+  },
+  {
+    "slug": "the-end-of-evangelion",
+    "file": "the-end-of-evangelion-3.jpg",
+    "kind": "body",
+    "source": "tmdb",
+    "sourceUrl": "https://image.tmdb.org/t/p/w1280/qBk54EapXBt9WTsK4p5OzQ9D0KK.jpg",
+    "width": 900,
+    "height": 507,
+    "bytes": 74158,
+    "note": "Instrumentality imagery: two crucified Evangelion units hang over a red horizon while Shinji lies collapsed on the ground below. Copyrighted film still, used under fair dealing for criticism and review, same basis as the other 21 posters on the site."
   }
 ]

@@ -61,43 +61,46 @@ export default config({
           formatting: true,
           links: true,
           dividers: true,
+          // Stills and artwork can sit between paragraphs. They land in the
+          // same folder as the covers, so manifest.json stays the one record
+          // of where every image on the site came from.
+          images: {
+            directory: "public/posters",
+            publicPath: "/posters/",
+          },
         }),
       },
     }),
   },
   singletons: {
+    /*
+     * The pull quote on the landing page, second panel. Kept as its own
+     * singleton so swapping it is one field and a save, not a code change.
+     */
+    quote: singleton({
+      label: "Landing quote",
+      path: "content/quote",
+      schema: {
+        text: fields.text({
+          label: "Quote",
+          description:
+            "A line from one of your reviews. No surrounding quote marks, the page adds those.",
+          multiline: true,
+          validation: { isRequired: true },
+        }),
+        review: fields.relationship({
+          label: "From which review",
+          description:
+            "Sets the attribution line and where 'Read the full review' goes. Leave blank to show the quote on its own.",
+          collection: "reviews",
+        }),
+      },
+    }),
     contact: singleton({
       label: "Contact",
       path: "content/contact",
       format: { contentField: "content" },
       schema: {
-        email: fields.text({
-          label: "Email address",
-          description: "Shown as a mailto link. Leave blank to hide it.",
-        }),
-        links: fields.array(
-          fields.object({
-            label: fields.text({
-              label: "Label",
-              description: 'e.g. "Letterboxd"',
-              validation: { isRequired: true },
-            }),
-            handle: fields.text({
-              label: "Handle",
-              description: 'Shown under the label, e.g. "@ramyan"',
-            }),
-            url: fields.url({
-              label: "URL",
-              validation: { isRequired: true },
-            }),
-          }),
-          {
-            label: "Elsewhere",
-            description:
-              "Letterboxd, AniList, Goodreads, GitHub, anywhere worth linking.",
-            itemLabel: (props) => props.fields.label.value || "Link",
-          },
-        ),
         content: fields.document({
           label: "Contact page",
           formatting: true,

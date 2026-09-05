@@ -1,24 +1,24 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: oklch(0.165 0.012 265);
-  --color-surface: oklch(0.205 0.014 265);
-  --color-rule: oklch(0.3 0.01 265);
-  --color-hairline: oklch(0.32 0.01 265);
-  --color-row: oklch(0.26 0.01 265);
-  --color-shelf: oklch(0.19 0.013 265);
+  --color-ink: oklch(0.145 0 0);
+  --color-surface: oklch(0.195 0 0);
+  --color-rule: oklch(0.3 0 0);
+  --color-hairline: oklch(0.32 0 0);
+  --color-row: oklch(0.26 0 0);
+  --color-shelf: oklch(0.175 0 0);
 
-  --color-fg: oklch(0.93 0.006 265);
-  --color-fg-bright: oklch(0.96 0.006 265);
-  --color-fg-title: oklch(0.94 0.006 265);
-  --color-fg-body: oklch(0.86 0.006 265);
-  --color-fg-quote: oklch(0.72 0.01 265);
-  --color-fg-muted: oklch(0.65 0.01 265);
-  --color-fg-soft: oklch(0.6 0.01 265);
-  --color-fg-excerpt: oklch(0.56 0.01 265);
-  --color-fg-faint: oklch(0.52 0.01 265);
-  --color-fg-dim: oklch(0.5 0.01 265);
-  --color-star-empty: oklch(0.42 0.01 265);
+  --color-fg: oklch(0.93 0 0);
+  --color-fg-bright: oklch(0.96 0 0);
+  --color-fg-title: oklch(0.94 0 0);
+  --color-fg-body: oklch(0.86 0 0);
+  --color-fg-quote: oklch(0.72 0 0);
+  --color-fg-muted: oklch(0.65 0 0);
+  --color-fg-soft: oklch(0.6 0 0);
+  --color-fg-excerpt: oklch(0.56 0 0);
+  --color-fg-faint: oklch(0.52 0 0);
+  --color-fg-dim: oklch(0.5 0 0);
+  --color-star-empty: oklch(0.42 0 0);
 
   --color-accent: #c9a15a;
 
@@ -73,24 +73,24 @@
   :root:not([data-theme="dark"]) {
     color-scheme: light;
 
-    --color-ink: oklch(0.972 0.007 265);
+    --color-ink: oklch(0.972 0 0);
     --color-surface: oklch(1 0 0);
-    --color-rule: oklch(0.86 0.012 265);
-    --color-hairline: oklch(0.9 0.01 265);
-    --color-row: oklch(0.91 0.01 265);
-    --color-shelf: oklch(0.945 0.008 265);
+    --color-rule: oklch(0.86 0 0);
+    --color-hairline: oklch(0.9 0 0);
+    --color-row: oklch(0.91 0 0);
+    --color-shelf: oklch(0.945 0 0);
 
-    --color-fg: oklch(0.31 0.012 265);
-    --color-fg-bright: oklch(0.21 0.014 265);
-    --color-fg-title: oklch(0.25 0.014 265);
-    --color-fg-body: oklch(0.33 0.012 265);
-    --color-fg-quote: oklch(0.45 0.014 265);
-    --color-fg-muted: oklch(0.47 0.014 265);
-    --color-fg-soft: oklch(0.51 0.014 265);
-    --color-fg-excerpt: oklch(0.49 0.014 265);
-    --color-fg-faint: oklch(0.54 0.014 265);
-    --color-fg-dim: oklch(0.56 0.014 265);
-    --color-star-empty: oklch(0.81 0.012 265);
+    --color-fg: oklch(0.31 0 0);
+    --color-fg-bright: oklch(0.21 0 0);
+    --color-fg-title: oklch(0.25 0 0);
+    --color-fg-body: oklch(0.33 0 0);
+    --color-fg-quote: oklch(0.45 0 0);
+    --color-fg-muted: oklch(0.47 0 0);
+    --color-fg-soft: oklch(0.51 0 0);
+    --color-fg-excerpt: oklch(0.49 0 0);
+    --color-fg-faint: oklch(0.54 0 0);
+    --color-fg-dim: oklch(0.56 0 0);
+    --color-star-empty: oklch(0.81 0 0);
 
     --color-accent: #8a6520;
 
@@ -115,24 +115,24 @@
 :root[data-theme="light"] {
   color-scheme: light;
 
-  --color-ink: oklch(0.972 0.007 265);
+  --color-ink: oklch(0.972 0 0);
   --color-surface: oklch(1 0 0);
-  --color-rule: oklch(0.86 0.012 265);
-  --color-hairline: oklch(0.9 0.01 265);
-  --color-row: oklch(0.91 0.01 265);
-  --color-shelf: oklch(0.945 0.008 265);
+  --color-rule: oklch(0.86 0 0);
+  --color-hairline: oklch(0.9 0 0);
+  --color-row: oklch(0.91 0 0);
+  --color-shelf: oklch(0.945 0 0);
 
-  --color-fg: oklch(0.31 0.012 265);
-  --color-fg-bright: oklch(0.21 0.014 265);
-  --color-fg-title: oklch(0.25 0.014 265);
-  --color-fg-body: oklch(0.33 0.012 265);
-  --color-fg-quote: oklch(0.45 0.014 265);
-  --color-fg-muted: oklch(0.47 0.014 265);
-  --color-fg-soft: oklch(0.51 0.014 265);
-  --color-fg-excerpt: oklch(0.49 0.014 265);
-  --color-fg-faint: oklch(0.54 0.014 265);
-  --color-fg-dim: oklch(0.56 0.014 265);
-  --color-star-empty: oklch(0.81 0.012 265);
+  --color-fg: oklch(0.31 0 0);
+  --color-fg-bright: oklch(0.21 0 0);
+  --color-fg-title: oklch(0.25 0 0);
+  --color-fg-body: oklch(0.33 0 0);
+  --color-fg-quote: oklch(0.45 0 0);
+  --color-fg-muted: oklch(0.47 0 0);
+  --color-fg-soft: oklch(0.51 0 0);
+  --color-fg-excerpt: oklch(0.49 0 0);
+  --color-fg-faint: oklch(0.54 0 0);
+  --color-fg-dim: oklch(0.56 0 0);
+  --color-star-empty: oklch(0.81 0 0);
 
   --color-accent: #8a6520;
 
@@ -177,7 +177,9 @@ html {
 /*
  * The hero's poster wall. Columns drift at different speeds so the grid never
  * reads as one moving block, and a mask plus a low opacity keep the title
- * legible over it.
+ * legible over it. The durations are deliberately long: at the old speed the
+ * movement pulled the eye off the title, and a wall of artwork only needs to
+ * be perceptibly alive, not actually going anywhere.
  */
 .poster-wall {
   position: absolute;
@@ -208,7 +210,7 @@ html {
   flex-direction: column;
   gap: 18px;
   will-change: transform;
-  animation: poster-drift-up 78s linear infinite;
+  animation: poster-drift-up 190s linear infinite;
 }
 
 .poster-col img {
@@ -226,19 +228,19 @@ html {
 }
 
 .poster-col-2 {
-  animation-duration: 92s;
+  animation-duration: 225s;
 }
 
 .poster-col-3 {
-  animation-duration: 66s;
+  animation-duration: 162s;
 }
 
 .poster-col-4 {
-  animation-duration: 104s;
+  animation-duration: 254s;
 }
 
 .poster-col-5 {
-  animation-duration: 84s;
+  animation-duration: 205s;
 }
 
 /* Columns 4 and 5 only exist on wide screens. */
@@ -255,9 +257,11 @@ html {
 }
 
 /*
- * Covers floating behind each genre panel. Positioned by hand rather than on a
- * grid so the cluster reads as scattered, and faded far enough back that the
- * label sits comfortably on top. Hovering one brings it forward and drops a
+ * Covers floating on each genre panel. The three genres used to share one row
+ * of narrow columns; with a screen each, six covers fit at a readable size,
+ * scattered by hand rather than on a grid so the cluster stays irregular. They
+ * sit around the centred label rather than behind it. Each is a link to its
+ * own review, and hovering one holds it still, brings it forward and drops a
  * line of the review underneath.
  */
 .genre-drift {
@@ -266,7 +270,6 @@ html {
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  mask-image: linear-gradient(to top, transparent 3%, #000 34%);
 }
 
 /* The wrapper carries position and the float; the image carries the tilt, so
@@ -275,7 +278,47 @@ html {
   position: absolute;
   display: block;
   pointer-events: auto;
-  animation: genre-float 13s ease-in-out infinite;
+  animation: genre-float 22s ease-in-out infinite;
+
+  /* Staged entrance: each cover rises and settles a beat after the one before,
+     rather than the whole cluster appearing at once. */
+  opacity: 0;
+  translate: 0 26px;
+  scale: 0.94;
+  transition:
+    opacity 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+    translate 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+    scale 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.genre-drift.is-visible .genre-drift-item {
+  opacity: 1;
+  translate: 0 0;
+  scale: 1;
+}
+
+/* The float only starts once the cover has arrived, so the two do not fight. */
+.genre-drift.is-visible .genre-drift-item {
+  animation-name: genre-float;
+}
+
+.genre-drift-item:nth-child(1) {
+  transition-delay: 0.05s;
+}
+.genre-drift-item:nth-child(2) {
+  transition-delay: 0.14s;
+}
+.genre-drift-item:nth-child(3) {
+  transition-delay: 0.23s;
+}
+.genre-drift-item:nth-child(4) {
+  transition-delay: 0.32s;
+}
+.genre-drift-item:nth-child(5) {
+  transition-delay: 0.41s;
+}
+.genre-drift-item:nth-child(6) {
+  transition-delay: 0.5s;
 }
 
 .genre-drift-item img {
@@ -284,21 +327,29 @@ html {
   aspect-ratio: 3 / 4;
   object-fit: cover;
   border-radius: 3px;
-  opacity: 0.3;
+  opacity: 0.42;
   box-shadow: 0 18px 40px oklch(0 0 0 / 0.45);
   transition:
     opacity 0.35s ease,
     scale 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.genre-drift-item:hover {
+.genre-drift-item:hover,
+.genre-drift-item:focus-visible {
   z-index: 5;
   animation-play-state: paused;
+  outline: none;
 }
 
-.genre-drift-item:hover img {
+.genre-drift-item:hover img,
+.genre-drift-item:focus-visible img {
   opacity: 1;
-  scale: 1.04;
+  scale: 1.05;
+}
+
+.genre-drift-item:focus-visible img {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 .genre-drift-note {
@@ -309,9 +360,9 @@ html {
   max-width: 240px;
   padding: 10px 12px;
   border-radius: 3px;
-  background: oklch(0.14 0.012 265 / 0.94);
+  background: oklch(0.12 0 0 / 0.94);
   backdrop-filter: blur(6px);
-  color: oklch(0.85 0.008 265);
+  color: oklch(0.85 0 0);
   font-family: var(--font-serif);
   font-size: 13px;
   line-height: 1.45;
@@ -334,24 +385,23 @@ html {
   text-transform: uppercase;
 }
 
-.genre-drift-item:hover .genre-drift-note {
+.genre-drift-item:hover .genre-drift-note,
+.genre-drift-item:focus-visible .genre-drift-note {
   opacity: 1;
   translate: 0 0;
   transition-delay: 0.06s;
 }
 
-/* The bottom two sit low enough that a note below them would be clipped. */
-.genre-drift-3 .genre-drift-note,
-.genre-drift-2 .genre-drift-note {
-  top: auto;
-  bottom: calc(100% + 10px);
-}
-
+/*
+ * Six slots across the full width, kept clear of the middle where the genre
+ * name sits. Widths are percentages with a ceiling so the covers grow with the
+ * screen but never dominate it on an ultrawide.
+ */
 .genre-drift-1 {
-  top: 7%;
-  left: 5%;
-  width: 38%;
-  max-width: 170px;
+  top: 12%;
+  left: 4%;
+  width: 15%;
+  max-width: 190px;
   animation-delay: 0s;
 }
 
@@ -360,23 +410,23 @@ html {
 }
 
 .genre-drift-2 {
-  top: 21%;
-  right: 5%;
-  width: 32%;
-  max-width: 150px;
-  animation-delay: -3.2s;
+  top: 50%;
+  left: 17%;
+  width: 12%;
+  max-width: 155px;
+  animation-delay: -3.6s;
 }
 
 .genre-drift-2 img {
-  rotate: 6deg;
+  rotate: 5deg;
 }
 
 .genre-drift-3 {
-  top: 46%;
-  left: 21%;
-  width: 30%;
+  top: 6%;
+  left: 33%;
+  width: 11%;
   max-width: 140px;
-  animation-delay: -6.5s;
+  animation-delay: -7.2s;
 }
 
 .genre-drift-3 img {
@@ -384,16 +434,79 @@ html {
 }
 
 .genre-drift-4 {
-  top: 2%;
-  left: 46%;
-  width: 26%;
-  max-width: 125px;
-  animation-delay: -9.1s;
+  top: 54%;
+  right: 31%;
+  width: 12%;
+  max-width: 155px;
+  animation-delay: -10.8s;
 }
 
 .genre-drift-4 img {
-  rotate: -3deg;
-  opacity: 0.2;
+  rotate: -4deg;
+}
+
+.genre-drift-5 {
+  top: 10%;
+  right: 15%;
+  width: 14%;
+  max-width: 180px;
+  animation-delay: -14.4s;
+}
+
+.genre-drift-5 img {
+  rotate: 6deg;
+}
+
+.genre-drift-6 {
+  top: 52%;
+  right: 3%;
+  width: 12%;
+  max-width: 155px;
+  animation-delay: -18s;
+}
+
+.genre-drift-6 img {
+  rotate: -5deg;
+}
+
+/* The lower row would have its note clipped by the foot of the panel. */
+.genre-drift-2 .genre-drift-note,
+.genre-drift-4 .genre-drift-note,
+.genre-drift-6 .genre-drift-note {
+  top: auto;
+  bottom: calc(100% + 10px);
+}
+
+/* The right hand covers hang their notes from the right, or they run off. */
+.genre-drift-5 .genre-drift-note,
+.genre-drift-6 .genre-drift-note {
+  left: auto;
+  right: 0;
+}
+
+/*
+ * Narrow screens have no room for six covers around a label, so the cluster
+ * drops to the four that sit furthest from the centre and shrinks the rest.
+ */
+@media (max-width: 899px) {
+  .genre-drift-3,
+  .genre-drift-4 {
+    display: none;
+  }
+
+  .genre-drift-1,
+  .genre-drift-5 {
+    width: 26%;
+  }
+
+  .genre-drift-2,
+  .genre-drift-6 {
+    width: 22%;
+  }
+
+  .genre-drift-note {
+    display: none;
+  }
 }
 
 @keyframes genre-float {
@@ -424,14 +537,26 @@ html {
   }
 }
 
-
+/*
+ * Snapping is mandatory rather than proximity. On proximity a full rotation of
+ * the wheel could come to rest between two panels, which is exactly what it
+ * looked like: a page stuck halfway. `scroll-snap-stop: always` stops one
+ * flick skipping a panel entirely, so one gesture moves one screen.
+ *
+ * The index at the foot of the page is a snap area taller than the viewport.
+ * The spec allows the viewport to rest anywhere inside an oversized area, so it
+ * scrolls freely once you are in it instead of fighting to re-centre.
+ */
 .landing-scroll {
-  scroll-behavior: smooth;
-  scroll-snap-type: y proximity;
+  /* Panel to panel movement is animated in lib/scroll-to-panel.ts, so the root
+     is deliberately left on instant scrolling. */
+  scroll-behavior: auto;
+  scroll-snap-type: y mandatory;
 }
 
 .landing-scroll .panel {
   scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 /* Scroll reveal is driven by an IntersectionObserver toggling .is-visible. */
@@ -448,28 +573,23 @@ html {
   transform: none;
 }
 
-.reveal-delay-2 {
-  transition-delay: 0.08s;
+/* The round control at the foot of each panel. */
+.scroll-down {
+  animation: scroll-down-nudge 2.6s ease-in-out infinite;
 }
 
-.reveal-delay-3 {
-  transition-delay: 0.16s;
+.scroll-down:hover {
+  animation-play-state: paused;
 }
 
-@keyframes scroll-cue-bounce {
+@keyframes scroll-down-nudge {
   0%,
   100% {
     transform: translateY(0);
-    opacity: 0.55;
   }
   50% {
-    transform: translateY(8px);
-    opacity: 1;
+    transform: translateY(5px);
   }
-}
-
-.scroll-cue {
-  animation: scroll-cue-bounce 1.8s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -483,13 +603,19 @@ html {
     transform: none;
   }
 
-  .scroll-cue {
+  .scroll-down {
     animation: none;
   }
 
   .poster-col,
   .genre-drift-item {
     animation: none;
+  }
+
+  .genre-drift-item {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
   }
 }
 
@@ -589,6 +715,99 @@ html {
   border: 0;
   border-top: 1px solid var(--color-rule);
   margin: 44px 0;
+}
+
+/*
+ * Stills and artwork between paragraphs. Sized from the image's own shape
+ * rather than forced into a fixed ratio, so a portrait book jacket stays
+ * portrait and a landscape still stays landscape. The ceiling on both axes
+ * keeps either from taking over the column.
+ */
+.review-body img {
+  float: right;
+  width: min(45%, 272px);
+  height: auto;
+  margin: 8px 0 22px 32px;
+  border-radius: 3px;
+  box-shadow: 0 18px 44px oklch(0 0 0 / 0.4);
+  shape-margin: 32px;
+}
+
+/* Alternate the side so a review with several does not stack them all down
+   one edge and leave a ragged channel of text beside it. */
+.review-body img:nth-of-type(2n) {
+  float: left;
+  margin: 8px 32px 22px 0;
+}
+
+/* A float that outruns its paragraph would otherwise hang into the footer
+   navigation below the article. */
+.review-body::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/*
+ * An image at either end of a review runs full width rather than floating.
+ *
+ * At the end there is no prose left to wrap it, so a float would strand it
+ * beside a column of empty space. At the start the opening paragraph is
+ * already carrying the drop cap, and a float on the other side squeezes the
+ * first lines to roughly half measure, which is the worst place on the page
+ * to do it. Both read better as a plate: one leading, one closing.
+ */
+.review-body > img:first-child {
+  float: none;
+  display: block;
+  width: auto;
+  max-width: min(100%, 560px);
+  margin: 0 auto 44px;
+}
+
+.review-body > img:last-child {
+  float: none;
+  display: block;
+  width: auto;
+  max-width: min(100%, 560px);
+  margin: 44px auto 0;
+}
+
+/*
+ * One column is too narrow to wrap text beside a picture: the remaining
+ * measure drops to a few words a line. Below that the images go back to
+ * running full width between the paragraphs.
+ */
+@media (max-width: 700px) {
+  .review-body img,
+  .review-body img:nth-of-type(2n) {
+    float: none;
+    display: block;
+    width: auto;
+    max-width: min(100%, 360px);
+    margin: 36px auto;
+  }
+}
+
+/* A caption, when the image is given one, reads as the note it is. */
+.review-body figure {
+  margin: 44px 0;
+}
+
+.review-body figure img {
+  float: none;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.review-body figcaption {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  text-align: center;
+  color: var(--color-fg-faint);
 }
 
 .review-body a {

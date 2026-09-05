@@ -10,6 +10,7 @@ import Stars from "@/components/stars";
 import { ChevronDownIcon } from "@/components/icons";
 import { GENRES, type Genre } from "@/lib/genre";
 import { formatDate, type Review } from "@/lib/format";
+import { useSlidingRule } from "@/lib/use-sliding-rule";
 
 type GenreFilter = Genre | "All";
 type Sort = "newest" | "oldest" | "rating";
@@ -29,6 +30,7 @@ const RATINGS: { value: number; label: string }[] = [
 ];
 
 const FEATURED_COUNT = 3;
+const FILTERS = ["All", ...GENRES] as GenreFilter[];
 
 export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
   // Genre and the search term come from the URL, which is what lets this page
@@ -48,6 +50,8 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
     setQuery(params.get("q") ?? "");
   }, [params]);
 
+  const rule = useSlidingRule<HTMLButtonElement>(FILTERS.indexOf(genre));
+
   const anyRated = useMemo(
     () => reviews.some((review) => review.rating != null),
     [reviews],
@@ -56,15 +60,19 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
   const untouched =
     genre === "All" && minRating === 0 && query.trim() === "" && sort === "newest";
 
-  const featured = useMemo(
-    () => reviews.slice(0, FEATURED_COUNT),
-    [reviews],
+  // The newest three keep their place at the top whatever is filtered below, so
+  // filtering never pulls the page out from under you.
+  const featured = useMemo(() => reviews.slice(0, FEATURED_COUNT), [reviews]);
+  const featuredSlugs = useMemo(
+    () => new Set(featured.map((review) => review.slug)),
+    [featured],
   );
 
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
     const filtered = reviews.filter(
       (review) =>
+        !featuredSlugs.has(review.slug) &&
         (genre === "All" || review.genre === genre) &&
         (minRating === 0 || (review.rating ?? 0) >= minRating) &&
         (needle === "" ||
@@ -75,22 +83,21 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
 
     return filtered.sort((a, b) => {
       if (sort === "rating") {
-        return (
-          (b.rating ?? 0) - (a.rating ?? 0) || b.date.localeCompare(a.date)
-        );
+        return (b.rating ?? 0) - (a.rating ?? 0) || b.date.localeCompare(a.date);
       }
       if (sort === "oldest") return a.date.localeCompare(b.date);
       return b.date.localeCompare(a.date);
     });
-  }, [reviews, genre, query, minRating, sort]);
+  }, [reviews, genre, query, minRating, sort, featuredSlugs]);
 
-  // With nothing filtered the newest three are already shown in full above, so
-  // the grid picks up from the fourth rather than repeating them.
-  const grid = untouched ? visible.slice(FEATURED_COUNT) : visible;
+  // The one or two sentence entries sit under their own heading rather than
+  // among pieces ten times their length.
+  const full = visible.filter((review) => !review.short);
+  const shorts = visible.filter((review) => review.short);
 
   return (
     <>
-      {untouched && featured.length > 0 ? (
+      {featured.length > 0 ? (
         <section className="px-5 pt-2 pb-14 sm:px-10 lg:px-[72px] lg:pb-20">
           <div className="mx-auto max-w-[1120px]">
             <h2 className="mb-2 border-b border-rule pb-4 text-xs font-semibold tracking-[0.16em] text-fg-dim uppercase">
@@ -111,27 +118,37 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
 
       <div className="mx-auto flex max-w-[1420px] flex-wrap items-end justify-between gap-x-8 gap-y-5 border-b border-rule px-5 pb-4 sm:px-10 lg:px-[72px]">
         <nav
+          ref={rule.trackRef as React.RefObject<HTMLElement>}
           aria-label="Filter by genre"
-          className="-mx-5 flex gap-6 overflow-x-auto px-5 sm:mx-0 sm:px-0 lg:gap-8"
+          className="relative -mx-5 flex gap-6 overflow-x-auto px-5 sm:mx-0 sm:px-0 lg:gap-8"
         >
-          {(["All", ...GENRES] as GenreFilter[]).map((option) => {
+          {FILTERS.map((option, index) => {
             const active = option === genre;
             return (
               <button
                 key={option}
+                ref={(node) => {
+                  rule.itemRefs.current[index] = node;
+                }}
                 type="button"
                 onClick={() => setGenre(option)}
                 aria-pressed={active}
-                className={`flex-none cursor-pointer border-b-2 pb-3 font-serif text-lg transition-colors ${
-                  active
-                    ? "border-accent text-fg-bright"
-                    : "border-transparent text-fg-muted hover:text-fg"
+                className={`flex-none cursor-pointer pb-3 font-serif text-lg transition-colors ${
+                  active ? "text-fg-bright" : "text-fg-muted hover:text-fg"
                 }`}
               >
                 {option}
               </button>
             );
           })}
+
+          {/* One rule for the row, so switching genre slides it across, the
+              same way the header nav moves between Reviews and About. */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-0 left-0 h-[2px] bg-accent"
+            style={rule.style}
+          />
         </nav>
 
         <div className="flex items-center gap-5 pb-3 lg:gap-6">
@@ -160,25 +177,42 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
 
       <div className="mx-auto max-w-[1420px] px-5 sm:px-10 lg:px-[72px]">
         <div className="pt-7 pb-2 text-xs tracking-[0.08em] text-fg-dim uppercase sm:pb-0">
-          {untouched ? `${grid.length} more` : visible.length}
           {untouched
-            ? ""
-            : ` ${visible.length === 1 ? "review" : "reviews"}`}
+            ? `${visible.length} more`
+            : `${visible.length} ${visible.length === 1 ? "review" : "reviews"}`}
           {query.trim() ? ` matching "${query.trim()}"` : ""}
         </div>
 
-        {grid.length === 0 ? (
+        {visible.length === 0 ? (
           <p className="py-16 font-serif text-lg text-fg-muted">
             No reviews match
             {query.trim() ? ` "${query.trim()}"` : " those filters"}.
           </p>
-        ) : (
+        ) : null}
+
+        {full.length > 0 ? (
           <div className="grid grid-cols-1 sm:mt-8 sm:grid-cols-2 sm:gap-x-7 sm:gap-y-11 md:grid-cols-3 xl:grid-cols-4">
-            {grid.map((review) => (
+            {full.map((review) => (
               <ReviewCard key={review.slug} review={review} />
             ))}
           </div>
-        )}
+        ) : null}
+
+        {shorts.length > 0 ? (
+          <section className="mt-16 lg:mt-20">
+            <h2 className="mb-1 border-b border-rule pb-4 text-xs font-semibold tracking-[0.16em] text-fg-dim uppercase">
+              Short takes
+            </h2>
+            <p className="mt-4 mb-2 max-w-[52ch] font-serif text-base text-fg-muted">
+              A couple of sentences and a line worth keeping.
+            </p>
+            <ul className="m-0 grid list-none grid-cols-1 gap-x-8 p-0 md:grid-cols-2">
+              {shorts.map((review) => (
+                <ShortTake key={review.slug} review={review} />
+              ))}
+            </ul>
+          </section>
+        ) : null}
       </div>
     </>
   );
@@ -186,17 +220,19 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
 
 /**
  * The newest few reviews, given room: cover on one side, the writing on the
- * other, alternating sides down the page.
+ * other, alternating sides down the page. The column order flips with the
+ * layout, so a flipped row puts its cover flush to the right edge instead of
+ * stranding it at the left of a wide column.
  */
-function FeaturedReview({
-  review,
-  flip,
-}: {
-  review: Review;
-  flip: boolean;
-}) {
+function FeaturedReview({ review, flip }: { review: Review; flip: boolean }) {
   return (
-    <article className="grid items-center gap-6 border-b border-row py-9 sm:grid-cols-[minmax(0,300px)_minmax(0,1fr)] sm:gap-12 sm:py-12 lg:gap-16">
+    <article
+      className={`grid items-center gap-6 border-b border-row py-9 sm:gap-12 sm:py-12 lg:gap-16 ${
+        flip
+          ? "sm:grid-cols-[minmax(0,1fr)_minmax(0,300px)]"
+          : "sm:grid-cols-[minmax(0,300px)_minmax(0,1fr)]"
+      }`}
+    >
       <Link
         href={`/reviews/${review.slug}`}
         className={`block w-[46%] max-w-[300px] sm:w-full ${
@@ -215,10 +251,10 @@ function FeaturedReview({
       </Link>
 
       <div className={flip ? "sm:order-1" : ""}>
-        <div className="mb-4 flex items-center gap-4">
+        <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2">
           <GenreTag genre={review.genre} />
           <span className="text-xs text-fg-faint">
-            {formatDate(review.date)}
+            Ramyan Chelva &middot; {formatDate(review.date)}
           </span>
         </div>
 
@@ -264,6 +300,39 @@ function FeaturedReview({
         </Link>
       </div>
     </article>
+  );
+}
+
+/**
+ * A short entry shown whole rather than teased, since the excerpt would be
+ * most of it anyway.
+ */
+function ShortTake({ review }: { review: Review }) {
+  return (
+    <li className="border-b border-row py-7">
+      <Link href={`/reviews/${review.slug}`} className="group block">
+        <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <GenreTag genre={review.genre} />
+          <span className="text-xs text-fg-faint">
+            {formatDate(review.date)}
+          </span>
+          {review.rating ? (
+            <span className="ml-auto">
+              <Stars rating={review.rating} size={13} />
+            </span>
+          ) : null}
+        </div>
+        <h3 className="m-0 font-serif text-base leading-[1.2] font-medium text-fg-bright transition-colors group-hover:text-accent">
+          {review.title}
+        </h3>
+        <p className="mt-1 font-serif text-sm text-fg-quote italic">
+          {review.subject}
+        </p>
+        <p className="mt-3 max-w-[52ch] font-serif text-base leading-[1.6] text-fg-body">
+          {review.excerpt}
+        </p>
+      </Link>
+    </li>
   );
 }
 

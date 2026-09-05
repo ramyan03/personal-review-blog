@@ -22,7 +22,9 @@ export default function LandingLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
-      <body className="bg-ink font-sans text-fg antialiased">{children}</body>
+      <body className="flex min-h-screen flex-col bg-ink font-sans text-fg antialiased">
+        {children}
+      </body>
     </html>
   );
 }

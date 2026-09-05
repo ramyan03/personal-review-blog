@@ -1,34 +1,27 @@
-import { Suspense } from "react";
-import type { Metadata } from "next";
-import ReviewIndex from "@/components/review-index";
-import { getReviews } from "@/lib/reviews";
+import { redirect } from "next/navigation";
+import { REVIEWS_ANCHOR } from "@/lib/links";
 
-export const metadata: Metadata = {
-  title: "Reviews",
-};
+/*
+ * There is one review index and it lives at the foot of the landing page.
+ * This route used to render a second copy of it, which meant scrolling to the
+ * bottom of the home page landed you on something that looked like /reviews
+ * but was a different page with its own heading and its own header. Keeping
+ * the URL alive and sending it to the real thing preserves every existing
+ * link, including ?genre= and ?q=, without maintaining two of anything.
+ */
+export default async function ReviewsPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const params = await searchParams;
+  const query = new URLSearchParams();
 
-export default async function ReviewsPage() {
-  const reviews = await getReviews();
+  for (const [key, value] of Object.entries(params)) {
+    const first = Array.isArray(value) ? value[0] : value;
+    if (first) query.set(key, first);
+  }
 
-  return (
-    <main className="pb-20 lg:pb-[120px]">
-      <div className="mx-auto max-w-[1420px] px-5 pt-1 pb-5 sm:px-10 lg:px-[72px] lg:pb-2">
-        <h1 className="m-0 font-serif text-xl leading-[1.15] font-medium tracking-[-0.01em] text-fg-bright lg:text-2xl">
-          Reviews
-        </h1>
-        <p className="mt-3 max-w-[560px] font-serif text-base leading-[1.5] text-fg-muted lg:text-lg">
-          Everything so far. Search, filter by genre or rating, or change the
-          order.
-        </p>
-      </div>
-      {/*
-       * The genre and search term live in the query string and are read on the
-       * client, so this page prerenders as static HTML and still responds to
-       * /reviews?genre=film or /reviews?q=kon.
-       */}
-      <Suspense fallback={null}>
-        <ReviewIndex reviews={reviews} />
-      </Suspense>
-    </main>
-  );
+  const qs = query.toString();
+  redirect(qs ? `/?${qs}#${REVIEWS_ANCHOR}` : `/#${REVIEWS_ANCHOR}`);
 }

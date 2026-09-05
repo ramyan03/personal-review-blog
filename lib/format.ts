@@ -13,6 +13,8 @@ export type Review = {
   cover: string | null;
   date: string;
   excerpt: string;
+  /** Set on the one or two sentence entries, which are grouped separately. */
+  short: boolean;
 };
 
 /** "Sep 2, 2026", parsed as a plain date so it never shifts with the timezone. */
