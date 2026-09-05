@@ -1,0 +1,149 @@
+[
+  {
+    "slug": "the-setting-sun",
+    "file": "the-setting-sun.jpg",
+    "source": "openlibrary",
+    "sourceUrl": "https://covers.openlibrary.org/b/id/597824-L.jpg",
+    "bytes": 21762
+  },
+  {
+    "slug": "kafka-on-the-shore",
+    "file": "kafka-on-the-shore.jpg",
+    "source": "openlibrary",
+    "sourceUrl": "https://covers.openlibrary.org/b/isbn/9781400079278-L.jpg",
+    "bytes": 67373
+  },
+  {
+    "slug": "the-blade-itself",
+    "file": "the-blade-itself.jpg",
+    "source": "openlibrary",
+    "sourceUrl": "https://covers.openlibrary.org/b/id/14543422-L.jpg",
+    "bytes": 61955
+  },
+  {
+    "slug": "the-bell-jar",
+    "file": "the-bell-jar.jpg",
+    "source": "openlibrary",
+    "sourceUrl": "https://covers.openlibrary.org/b/id/8477115-L.jpg",
+    "bytes": 46364
+  },
+  {
+    "slug": "the-picture-of-dorian-gray",
+    "file": "the-picture-of-dorian-gray.jpg",
+    "source": "openlibrary",
+    "sourceUrl": "https://covers.openlibrary.org/b/id/14314858-L.jpg",
+    "bytes": 38498
+  },
+  {
+    "slug": "princess-mononoke",
+    "file": "princess-mononoke.jpg",
+    "source": "anilist",
+    "sourceUrl": "https://anilist.co/anime/164",
+    "bytes": 99911
+  },
+  {
+    "slug": "spirited-away",
+    "file": "spirited-away.jpg",
+    "source": "anilist",
+    "sourceUrl": "https://anilist.co/anime/199",
+    "bytes": 106386
+  },
+  {
+    "slug": "millennium-actress",
+    "file": "millennium-actress.jpg",
+    "source": "anilist",
+    "sourceUrl": "https://anilist.co/anime/1033",
+    "bytes": 132502
+  },
+  {
+    "slug": "tokyo-godfathers",
+    "file": "tokyo-godfathers.jpg",
+    "source": "anilist",
+    "sourceUrl": "https://anilist.co/anime/759",
+    "bytes": 155167
+  },
+  {
+    "slug": "the-end-of-evangelion",
+    "file": "the-end-of-evangelion.jpg",
+    "source": "anilist",
+    "sourceUrl": "https://anilist.co/anime/32",
+    "bytes": 63666
+  },
+  {
+    "slug": "paprika",
+    "file": "paprika.jpg",
+    "source": "anilist",
+    "sourceUrl": "https://anilist.co/anime/1943",
+    "bytes": 97047
+  },
+  {
+    "slug": "kikis-delivery-service",
+    "file": "kikis-delivery-service.jpg",
+    "source": "anilist",
+    "sourceUrl": "https://anilist.co/anime/512",
+    "bytes": 134701
+  },
+  {
+    "slug": "psycho",
+    "file": "psycho.jpg",
+    "source": "tmdb",
+    "sourceUrl": "https://www.themoviedb.org/movie/539",
+    "bytes": 77520
+  },
+  {
+    "slug": "the-witch",
+    "file": "the-witch.jpg",
+    "source": "tmdb",
+    "sourceUrl": "https://www.themoviedb.org/movie/310131",
+    "bytes": 49278
+  },
+  {
+    "slug": "synecdoche-new-york",
+    "file": "synecdoche-new-york.jpg",
+    "source": "tmdb",
+    "sourceUrl": "https://www.themoviedb.org/movie/4960",
+    "bytes": 151316
+  },
+  {
+    "slug": "everything-everywhere-all-at-once",
+    "file": "everything-everywhere-all-at-once.jpg",
+    "source": "tmdb",
+    "sourceUrl": "https://www.themoviedb.org/movie/545611",
+    "bytes": 128736
+  },
+  {
+    "slug": "requiem-for-a-dream",
+    "file": "requiem-for-a-dream.jpg",
+    "source": "tmdb",
+    "sourceUrl": "https://www.themoviedb.org/movie/641",
+    "bytes": 98333
+  },
+  {
+    "slug": "nayakan",
+    "file": "nayakan.jpg",
+    "source": "tmdb",
+    "sourceUrl": "https://www.themoviedb.org/movie/29971",
+    "bytes": 66054
+  },
+  {
+    "slug": "kattradhu-thamizh",
+    "file": "kattradhu-thamizh.jpg",
+    "source": "tmdb",
+    "sourceUrl": "https://www.themoviedb.org/movie/69550",
+    "bytes": 73877
+  },
+  {
+    "slug": "mulholland-drive",
+    "file": "mulholland-drive.jpg",
+    "source": "tmdb",
+    "sourceUrl": "https://www.themoviedb.org/movie/1018",
+    "bytes": 71256
+  },
+  {
+    "slug": "a-real-pain",
+    "file": "a-real-pain.jpg",
+    "source": "tmdb",
+    "sourceUrl": "https://www.themoviedb.org/movie/1013850",
+    "bytes": 58902
+  }
+]
