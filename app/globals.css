@@ -286,9 +286,9 @@ html {
   translate: 0 26px;
   scale: 0.94;
   transition:
-    opacity 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
-    translate 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
-    scale 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+    opacity 0.6s cubic-bezier(0.22, 0.61, 0.36, 1),
+    translate 0.6s cubic-bezier(0.22, 0.61, 0.36, 1),
+    scale 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .genre-drift.is-visible .genre-drift-item {
@@ -303,22 +303,22 @@ html {
 }
 
 .genre-drift-item:nth-child(1) {
-  transition-delay: 0.05s;
+  transition-delay: 0.04s;
 }
 .genre-drift-item:nth-child(2) {
-  transition-delay: 0.14s;
+  transition-delay: 0.11s;
 }
 .genre-drift-item:nth-child(3) {
-  transition-delay: 0.23s;
+  transition-delay: 0.18s;
 }
 .genre-drift-item:nth-child(4) {
-  transition-delay: 0.32s;
+  transition-delay: 0.25s;
 }
 .genre-drift-item:nth-child(5) {
-  transition-delay: 0.41s;
+  transition-delay: 0.32s;
 }
 .genre-drift-item:nth-child(6) {
-  transition-delay: 0.5s;
+  transition-delay: 0.39s;
 }
 
 .genre-drift-item img {
@@ -345,6 +345,20 @@ html {
 .genre-drift-item:focus-visible img {
   opacity: 1;
   scale: 1.05;
+}
+
+/*
+ * Quieting the room. Bringing one cover forward did not create a focal point
+ * on its own, because the other five stayed exactly as bright. They now recede
+ * while one is held. Deliberately only opacity: blurring or desaturating them
+ * would announce the technique, and the point is that you notice the focus
+ * rather than the effect.
+ */
+.genre-drift:has(.genre-drift-item:hover) .genre-drift-item:not(:hover) img,
+.genre-drift:has(.genre-drift-item:focus-visible)
+  .genre-drift-item:not(:focus-visible)
+  img {
+  opacity: 0.24;
 }
 
 .genre-drift-item:focus-visible img {
@@ -375,8 +389,11 @@ html {
 }
 
 .genre-drift-note-title {
-  display: block;
-  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 5px;
   color: var(--color-accent);
   font-family: var(--font-sans);
   font-size: 10px;
@@ -385,11 +402,17 @@ html {
   text-transform: uppercase;
 }
 
+/* The rating sits with the title rather than on a line of its own, so the
+   note stays two lines whether or not a review is rated. */
+.genre-drift-note-stars {
+  flex: none;
+}
+
 .genre-drift-item:hover .genre-drift-note,
 .genre-drift-item:focus-visible .genre-drift-note {
   opacity: 1;
   translate: 0 0;
-  transition-delay: 0.06s;
+  transition-delay: 0.12s;
 }
 
 /*

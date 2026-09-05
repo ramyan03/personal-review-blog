@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Reveal from "@/components/reveal";
 import ScrollDown from "@/components/scroll-down";
+import Stars from "@/components/stars";
 import IndexLink from "@/components/index-link";
 import { genrePanel, type Genre } from "@/lib/genre";
 import { truncate, type Review } from "@/lib/format";
@@ -49,7 +50,14 @@ export default function GenreSection({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={entry.cover ?? ""} alt="" loading="lazy" decoding="async" />
             <span className="genre-drift-note" aria-hidden="true">
-              <span className="genre-drift-note-title">{entry.title}</span>
+              <span className="genre-drift-note-title">
+                {entry.title}
+                {entry.rating ? (
+                  <span className="genre-drift-note-stars">
+                    <Stars rating={entry.rating} size={11} />
+                  </span>
+                ) : null}
+              </span>
               {truncate(entry.excerpt, 96)}
             </span>
           </Link>

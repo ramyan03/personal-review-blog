@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { DocumentRenderer } from "@keystatic/core/renderer";
 import Cover from "@/components/cover";
 import GenreTag from "@/components/genre-tag";
+import MoreInGenre from "@/components/more-in-genre";
 import Stars, { formatRating } from "@/components/stars";
 import { ArrowLeftIcon } from "@/components/icons";
 import { reader } from "@/lib/reader";
@@ -91,7 +92,9 @@ export default async function ReviewPage({ params }: Params) {
         <DocumentRenderer document={review.body} />
       </article>
 
-      <nav className="mt-[72px] flex items-center justify-between gap-6 border-t border-rule pt-8 text-sm text-fg-soft">
+      <MoreInGenre genre={review.genre} currentSlug={slug} reviews={all} />
+
+      <nav className="mt-14 flex items-center justify-between gap-6 border-t border-rule pt-8 text-sm text-fg-soft">
         {newer ? (
           <Link
             href={`/reviews/${newer.slug}`}

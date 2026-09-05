@@ -190,8 +190,13 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
           </p>
         ) : null}
 
+        {/*
+          Three columns, not four. At four the covers were small enough that
+          the index read as a database of thumbnails; at three they are large
+          enough to be looked at, which is the point of a shelf of artwork.
+        */}
         {full.length > 0 ? (
-          <div className="grid grid-cols-1 sm:mt-8 sm:grid-cols-2 sm:gap-x-7 sm:gap-y-11 md:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-1 sm:mt-8 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-12 md:grid-cols-3 lg:gap-x-10 lg:gap-y-14">
             {full.map((review) => (
               <ReviewCard key={review.slug} review={review} />
             ))}
