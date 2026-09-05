@@ -9,7 +9,7 @@ const LINKS = [
 export default function SiteFooter() {
   return (
     <footer className="mt-auto border-t border-rule px-5 py-9 sm:px-10 lg:px-[72px]">
-      <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
+      <div className="mx-auto flex max-w-[1420px] flex-wrap items-center justify-between gap-x-8 gap-y-4">
         <Link
           href="/"
           className="font-serif text-base font-medium text-fg-title italic"

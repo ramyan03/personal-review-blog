@@ -35,3 +35,12 @@ export function byline(review: Pick<Review, "genre" | "subject">): string {
   }
   return review.subject;
 }
+
+/** Cuts at a word boundary so a teaser never ends mid-word. */
+export function truncate(text: string, max: number): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max);
+  const lastSpace = cut.lastIndexOf(" ");
+  return `${cut.slice(0, lastSpace > max * 0.6 ? lastSpace : max).replace(/[,;:.]$/, "")}...`;
+}

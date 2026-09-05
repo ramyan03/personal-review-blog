@@ -10,17 +10,16 @@ export default function GenreTag({
   const theme = genreTheme(genre);
   return (
     <span
-      className={
-        size === "md"
-          ? "inline-flex items-center rounded-full border px-[11px] py-[5px] text-xs font-semibold tracking-[0.08em] uppercase"
-          : "inline-flex items-center rounded-full border px-[9px] py-[4px] text-xs font-semibold tracking-[0.08em] uppercase"
-      }
-      style={{
-        background: theme.pillBg,
-        color: theme.pillColor,
-        borderColor: theme.pillBorder,
-      }}
+      className={`inline-flex items-center gap-[6px] font-semibold tracking-[0.14em] uppercase ${
+        size === "md" ? "text-xs" : "text-xs"
+      }`}
+      style={{ color: theme.pillColor }}
     >
+      <span
+        aria-hidden="true"
+        className="inline-block h-[5px] w-[5px] rounded-full"
+        style={{ background: "currentColor" }}
+      />
       {genre}
     </span>
   );

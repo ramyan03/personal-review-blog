@@ -1,17 +1,10 @@
 import Link from "next/link";
-import Cover from "@/components/cover";
 import LandingNav from "@/components/landing-nav";
+import PosterWall from "@/components/poster-wall";
 import Reveal from "@/components/reveal";
-import Stars from "@/components/stars";
 import { GENRES, genrePanel, type Genre } from "@/lib/genre";
-import type { Review } from "@/lib/format";
+import { truncate, type Review } from "@/lib/format";
 import { getReviews } from "@/lib/reviews";
-
-const SHELF_ID: Record<Genre, string> = {
-  Books: "books-shelf",
-  Film: "film-shelf",
-  Anime: "anime-shelf",
-};
 
 /** The closing pull-quote, taken from a real review rather than invented. */
 const FEATURED = {
@@ -29,6 +22,9 @@ export default async function LandingPage() {
     ]),
   ) as Record<Genre, Review[]>;
   const featured = reviews.find((review) => review.slug === FEATURED.slug);
+  const covers = reviews
+    .map((review) => review.cover)
+    .filter((cover): cover is string => Boolean(cover));
 
   return (
     <>
@@ -36,17 +32,22 @@ export default async function LandingPage() {
 
       <main>
         {/* Hero */}
-        <section className="panel relative flex min-h-screen flex-col items-center justify-center px-6 py-10 text-center">
-          <span className="mb-7 text-xs tracking-[0.28em] text-fg-faint uppercase">
-            Ramyan Reviews
-          </span>
-          <h1 className="m-0 font-serif text-display leading-[0.95] font-medium tracking-[-0.01em] text-fg-bright italic">
-            Ramyan
-          </h1>
-          <p className="mt-8 max-w-[540px] font-serif text-lg leading-[1.6] text-fg-quote">
-            Books, films, and anime, reviewed as I finish them.
-          </p>
-          <div className="scroll-cue absolute bottom-12 flex flex-col items-center gap-2 text-fg-soft">
+        <section className="panel relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-10 text-center">
+          <PosterWall covers={covers} />
+
+          <div className="relative z-[1] flex flex-col items-center">
+            <h1 className="m-0 max-w-[13ch] font-serif text-display leading-[0.92] font-medium tracking-[-0.02em] text-fg-bright italic">
+              Ramyan Reviews
+            </h1>
+            <p className="mt-8 max-w-[520px] font-serif text-lg leading-[1.6] text-fg-quote">
+              Books, films, and anime, reviewed as I finish them.
+            </p>
+            <span className="mt-7 text-xs tracking-[0.18em] text-fg-faint uppercase">
+              {reviews.length} reviews since 2023
+            </span>
+          </div>
+
+          <div className="scroll-cue absolute bottom-12 z-[1] flex flex-col items-center gap-2 text-fg-soft">
             <span className="text-xs tracking-[0.14em] uppercase">Scroll</span>
             <svg
               width="14"
@@ -62,67 +63,69 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* Genre split. Each panel jumps to its shelf below. */}
+        {/* Genre split. Each panel goes straight to that genre in the index. */}
         <section className="panel grid min-h-screen grid-cols-1 md:grid-cols-3">
           {GENRES.map((genre, index) => {
             const panel = genrePanel(genre);
             const entries = byGenre[genre] ?? [];
+            const drift = entries.filter((entry) => entry.cover).slice(0, 4);
+
             return (
               <Reveal
                 key={genre}
                 delay={index === 1 ? 2 : index === 2 ? 3 : undefined}
                 className="flex"
               >
-                <a
-                  href={`#${SHELF_ID[genre]}`}
-                  className="group flex w-full flex-col items-start justify-center gap-[14px] px-8 py-16 lg:px-12"
+                <Link
+                  href={`/reviews?genre=${genre.toLowerCase()}`}
+                  className="group relative flex w-full flex-col items-start justify-end overflow-hidden px-8 py-16 lg:px-12 lg:py-20"
                   style={{ background: panel.background }}
                 >
-                  <div className="flex items-end py-1">
-                    {entries.slice(0, 3).map((review, i) => (
-                      <div
-                        key={review.slug}
-                        className={i > 0 ? "-ml-4" : ""}
-                        style={{
-                          transform: `translateY(${i * 5}px)`,
-                          zIndex: 3 - i,
-                        }}
+                  {/* Covers from this genre, floating behind the label. Hover
+                      one and it comes forward with a line from the review. */}
+                  <div className="genre-drift" aria-hidden="true">
+                    {drift.map((entry, i) => (
+                      <span
+                        key={entry.slug}
+                        className={`genre-drift-item genre-drift-${i + 1}`}
                       >
-                        <Cover
-                          title={review.title}
-                          genre={genre}
-                          cover={review.cover}
-                          className="w-12"
-                          letterClassName="text-[22px]"
-                          ring
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={entry.cover ?? ""}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
                         />
-                      </div>
+                        <span className="genre-drift-note">
+                          <span className="genre-drift-note-title">
+                            {entry.title}
+                          </span>
+                          {truncate(entry.excerpt, 96)}
+                        </span>
+                      </span>
                     ))}
                   </div>
 
-                  <h2
-                    className="m-0 font-serif text-xl font-medium"
-                    style={{ color: panel.heading }}
-                  >
-                    {genre}
-                  </h2>
-                  <span
-                    className="text-xs tracking-[0.08em] uppercase"
-                    style={{ color: panel.stat }}
-                  >
-                    {entries.length}{" "}
-                    {entries.length === 1 ? "review" : "reviews"} &rarr;
-                  </span>
-                </a>
+                  <div className="relative z-[1]">
+                    <h2
+                      className="m-0 font-serif text-2xl leading-none font-medium"
+                      style={{ color: panel.heading }}
+                    >
+                      {genre}
+                    </h2>
+                    <span
+                      className="mt-4 block text-xs tracking-[0.14em] uppercase transition-colors group-hover:text-accent"
+                      style={{ color: panel.stat }}
+                    >
+                      {entries.length}{" "}
+                      {entries.length === 1 ? "review" : "reviews"} &rarr;
+                    </span>
+                  </div>
+                </Link>
               </Reveal>
             );
           })}
         </section>
-
-        {/* Shelves */}
-        {GENRES.map((genre) => (
-          <Shelf key={genre} genre={genre} reviews={byGenre[genre] ?? []} />
-        ))}
 
         {/* Featured quote */}
         {featured ? (
@@ -168,9 +171,9 @@ export default async function LandingPage() {
           <Reveal delay={2}>
             <Link
               href="/reviews"
-              className="inline-flex items-center gap-3 rounded-full border border-accent px-10 py-[18px] text-xs font-semibold tracking-[0.1em] text-accent uppercase transition-colors hover:bg-[color-mix(in_srgb,var(--color-accent)_14%,transparent)]"
+              className="inline-flex items-center gap-3 border-b-2 border-accent pb-3 text-xs font-semibold tracking-[0.16em] text-accent uppercase transition-colors hover:text-fg-bright"
             >
-              Browse all {reviews.length} reviews
+              See all {reviews.length} reviews
               <svg
                 width="14"
                 height="10"
@@ -187,59 +190,5 @@ export default async function LandingPage() {
         </section>
       </main>
     </>
-  );
-}
-
-function Shelf({ genre, reviews }: { genre: Genre; reviews: Review[] }) {
-  const panel = genrePanel(genre);
-  const shelf = reviews.slice(0, 5);
-
-  return (
-    <section
-      id={SHELF_ID[genre]}
-      className="panel flex min-h-screen flex-col justify-center bg-shelf px-6 py-24 sm:px-10 lg:px-[72px]"
-    >
-      <Reveal>
-        <div className="mb-12 flex flex-wrap items-end justify-between gap-5 border-b border-rule pb-6">
-          <h2
-            className="m-0 font-serif text-2xl leading-none font-medium"
-            style={{ color: panel.heading }}
-          >
-            {genre}
-          </h2>
-          <Link
-            href={`/reviews?genre=${genre.toLowerCase()}`}
-            className="text-xs font-semibold tracking-[0.08em] text-accent uppercase"
-          >
-            All {genre} &rarr;
-          </Link>
-        </div>
-
-        {shelf.length === 0 ? (
-          <p className="font-serif text-lg text-fg-muted">Nothing here yet.</p>
-        ) : (
-          <div className="grid grid-cols-2 gap-x-6 gap-y-9 sm:grid-cols-3 lg:grid-cols-5">
-            {shelf.map((review) => (
-              <Link
-                key={review.slug}
-                href={`/reviews/${review.slug}`}
-                className="group flex flex-col gap-3"
-              >
-                <Cover
-                  title={review.title}
-                  genre={genre}
-                  cover={review.cover}
-                  letterClassName="text-[56px]"
-                />
-                <h3 className="line-clamp-2 font-serif text-base leading-[1.3] font-medium text-fg-title transition-colors group-hover:text-accent">
-                  {review.title}
-                </h3>
-                {review.rating ? <Stars rating={review.rating} /> : null}
-              </Link>
-            ))}
-          </div>
-        )}
-      </Reveal>
-    </section>
   );
 }

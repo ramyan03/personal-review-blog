@@ -91,3 +91,22 @@ export function SearchIcon() {
     </svg>
   );
 }
+
+export function ArrowUpIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 19.5V4.5" />
+      <path d="m5.5 11 6.5-6.5 6.5 6.5" />
+    </svg>
+  );
+}

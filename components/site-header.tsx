@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Suspense,
   useCallback,
@@ -12,7 +12,7 @@ import {
 } from "react";
 import ThemeToggle from "@/components/theme-toggle";
 import HeaderSearch from "@/components/header-search";
-import { ArrowLeftIcon, HomeIcon } from "@/components/icons";
+import { ArrowUpIcon, HomeIcon } from "@/components/icons";
 
 const NAV = [
   { href: "/reviews", label: "Reviews" },
@@ -22,7 +22,6 @@ const NAV = [
 
 export default function SiteHeader() {
   const pathname = usePathname();
-  const router = useRouter();
   const activeIndex = NAV.findIndex((item) => pathname.startsWith(item.href));
 
   const navRef = useRef<HTMLElement | null>(null);
@@ -59,22 +58,21 @@ export default function SiteHeader() {
   }, [measure]);
 
   return (
-    <header className="flex flex-wrap items-center gap-x-6 gap-y-4 px-5 pt-7 pb-5 sm:px-10 lg:px-[72px] lg:pt-10 lg:pb-7">
+    <header className="mx-auto flex w-full max-w-[1420px] flex-wrap items-center gap-x-6 gap-y-4 px-5 pt-7 pb-5 sm:px-10 lg:px-[72px] lg:pt-10 lg:pb-7">
       <div className="flex flex-none items-center gap-1">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          aria-label="Go back"
-          title="Go back"
-          className="flex cursor-pointer items-center justify-center rounded-full p-2 text-fg-muted transition-colors hover:bg-surface hover:text-fg"
-        >
-          <ArrowLeftIcon />
-        </button>
         <Link
           href="/"
-          aria-label="Home"
-          title="Home"
-          className="flex items-center justify-center rounded-full p-2 text-fg-muted transition-colors hover:bg-surface hover:text-fg"
+          aria-label="Up to the landing page"
+          title="Up to the landing page"
+          className="flex items-center justify-center p-2 text-fg-muted transition-colors hover:text-fg"
+        >
+          <ArrowUpIcon />
+        </Link>
+        <Link
+          href="/reviews"
+          aria-label="All reviews"
+          title="All reviews"
+          className="flex items-center justify-center p-2 text-fg-muted transition-colors hover:text-fg"
         >
           <HomeIcon />
         </Link>

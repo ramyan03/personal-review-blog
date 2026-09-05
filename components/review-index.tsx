@@ -1,11 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Cover from "@/components/cover";
 import ReviewCard from "@/components/review-card";
+import GenreTag from "@/components/genre-tag";
+import Stars from "@/components/stars";
 import { ChevronDownIcon } from "@/components/icons";
 import { GENRES, type Genre } from "@/lib/genre";
-import type { Review } from "@/lib/format";
+import { formatDate, type Review } from "@/lib/format";
 
 type GenreFilter = Genre | "All";
 type Sort = "newest" | "oldest" | "rating";
@@ -23,6 +27,8 @@ const RATINGS: { value: number; label: string }[] = [
   { value: 4.5, label: "4.5 & up" },
   { value: 5, label: "5 only" },
 ];
+
+const FEATURED_COUNT = 3;
 
 export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
   // Genre and the search term come from the URL, which is what lets this page
@@ -42,9 +48,16 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
     setQuery(params.get("q") ?? "");
   }, [params]);
 
-  // The rating controls only make sense once something carries a rating.
   const anyRated = useMemo(
     () => reviews.some((review) => review.rating != null),
+    [reviews],
+  );
+
+  const untouched =
+    genre === "All" && minRating === 0 && query.trim() === "" && sort === "newest";
+
+  const featured = useMemo(
+    () => reviews.slice(0, FEATURED_COUNT),
     [reviews],
   );
 
@@ -71,10 +84,36 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
     });
   }, [reviews, genre, query, minRating, sort]);
 
+  // With nothing filtered the newest three are already shown in full above, so
+  // the grid picks up from the fourth rather than repeating them.
+  const grid = untouched ? visible.slice(FEATURED_COUNT) : visible;
+
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-5 border-b border-rule px-5 pb-5 sm:px-10 lg:px-[72px] lg:pt-9 lg:pb-7">
-        <div className="-mx-5 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:gap-[10px] sm:overflow-visible sm:px-0">
+      {untouched && featured.length > 0 ? (
+        <section className="px-5 pt-2 pb-14 sm:px-10 lg:px-[72px] lg:pb-20">
+          <div className="mx-auto max-w-[1120px]">
+            <h2 className="mb-2 border-b border-rule pb-4 text-xs font-semibold tracking-[0.16em] text-fg-dim uppercase">
+              Latest
+            </h2>
+            <div className="flex flex-col">
+              {featured.map((review, index) => (
+                <FeaturedReview
+                  key={review.slug}
+                  review={review}
+                  flip={index % 2 === 1}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <div className="mx-auto flex max-w-[1420px] flex-wrap items-end justify-between gap-x-8 gap-y-5 border-b border-rule px-5 pb-4 sm:px-10 lg:px-[72px]">
+        <nav
+          aria-label="Filter by genre"
+          className="-mx-5 flex gap-6 overflow-x-auto px-5 sm:mx-0 sm:px-0 lg:gap-8"
+        >
           {(["All", ...GENRES] as GenreFilter[]).map((option) => {
             const active = option === genre;
             return (
@@ -83,29 +122,19 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
                 type="button"
                 onClick={() => setGenre(option)}
                 aria-pressed={active}
-                className="flex-none cursor-pointer rounded-full border px-4 py-2 text-xs font-semibold tracking-[0.08em] uppercase transition-colors lg:px-[18px] lg:py-[9px]"
-                style={
+                className={`flex-none cursor-pointer border-b-2 pb-3 font-serif text-lg transition-colors ${
                   active
-                    ? {
-                        borderColor: "var(--color-accent)",
-                        background:
-                          "color-mix(in srgb, var(--color-accent) 16%, transparent)",
-                        color: "var(--color-fg-bright)",
-                      }
-                    : {
-                        borderColor: "var(--color-hairline)",
-                        background: "transparent",
-                        color: "var(--color-fg-muted)",
-                      }
-                }
+                    ? "border-accent text-fg-bright"
+                    : "border-transparent text-fg-muted hover:text-fg"
+                }`}
               >
                 {option}
               </button>
             );
           })}
-        </div>
+        </nav>
 
-        <div className="flex items-center gap-5 lg:gap-6">
+        <div className="flex items-center gap-5 pb-3 lg:gap-6">
           {anyRated ? (
             <>
               <SelectControl
@@ -129,25 +158,112 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
         </div>
       </div>
 
-      <div className="px-5 sm:px-10 lg:px-[72px]">
+      <div className="mx-auto max-w-[1420px] px-5 sm:px-10 lg:px-[72px]">
         <div className="pt-7 pb-2 text-xs tracking-[0.08em] text-fg-dim uppercase sm:pb-0">
-          {visible.length} {visible.length === 1 ? "review" : "reviews"}
+          {untouched ? `${grid.length} more` : visible.length}
+          {untouched
+            ? ""
+            : ` ${visible.length === 1 ? "review" : "reviews"}`}
           {query.trim() ? ` matching "${query.trim()}"` : ""}
         </div>
 
-        {visible.length === 0 ? (
+        {grid.length === 0 ? (
           <p className="py-16 font-serif text-lg text-fg-muted">
-            No reviews match{query.trim() ? ` "${query.trim()}"` : " those filters"}.
+            No reviews match
+            {query.trim() ? ` "${query.trim()}"` : " those filters"}.
           </p>
         ) : (
           <div className="grid grid-cols-1 sm:mt-8 sm:grid-cols-2 sm:gap-x-7 sm:gap-y-11 md:grid-cols-3 xl:grid-cols-4">
-            {visible.map((review) => (
+            {grid.map((review) => (
               <ReviewCard key={review.slug} review={review} />
             ))}
           </div>
         )}
       </div>
     </>
+  );
+}
+
+/**
+ * The newest few reviews, given room: cover on one side, the writing on the
+ * other, alternating sides down the page.
+ */
+function FeaturedReview({
+  review,
+  flip,
+}: {
+  review: Review;
+  flip: boolean;
+}) {
+  return (
+    <article className="grid items-center gap-6 border-b border-row py-9 sm:grid-cols-[minmax(0,300px)_minmax(0,1fr)] sm:gap-12 sm:py-12 lg:gap-16">
+      <Link
+        href={`/reviews/${review.slug}`}
+        className={`block w-[46%] max-w-[300px] sm:w-full ${
+          flip ? "sm:order-2" : ""
+        }`}
+        tabIndex={-1}
+        aria-hidden="true"
+      >
+        <Cover
+          title={review.title}
+          genre={review.genre}
+          cover={review.cover}
+          letterClassName="text-[92px]"
+          sizes="(min-width: 640px) 300px, 46vw"
+        />
+      </Link>
+
+      <div className={flip ? "sm:order-1" : ""}>
+        <div className="mb-4 flex items-center gap-4">
+          <GenreTag genre={review.genre} />
+          <span className="text-xs text-fg-faint">
+            {formatDate(review.date)}
+          </span>
+        </div>
+
+        <h3 className="m-0 font-serif text-xl leading-[1.12] font-medium tracking-[-0.01em] text-fg-bright lg:text-2xl">
+          <Link
+            href={`/reviews/${review.slug}`}
+            className="transition-colors hover:text-accent"
+          >
+            {review.title}
+          </Link>
+        </h3>
+
+        <p className="mt-2 font-serif text-base text-fg-quote italic lg:text-lg">
+          {review.subject}
+        </p>
+
+        {review.rating ? (
+          <div className="mt-4">
+            <Stars rating={review.rating} size={15} />
+          </div>
+        ) : null}
+
+        <p className="mt-5 max-w-[52ch] font-serif text-base leading-[1.6] text-fg-body lg:text-lg">
+          {review.excerpt}
+        </p>
+
+        <Link
+          href={`/reviews/${review.slug}`}
+          className="mt-6 inline-flex items-center gap-2 text-xs font-semibold tracking-[0.1em] text-accent uppercase"
+        >
+          Read the review
+          <svg
+            width="12"
+            height="9"
+            viewBox="0 0 12 9"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.5}
+          >
+            <path d="M1 4.5h10M7 1l3.5 3.5L7 8" />
+          </svg>
+        </Link>
+      </div>
+    </article>
   );
 }
 

@@ -64,7 +64,7 @@ function ContactRow({
         {...(external
           ? { target: "_blank", rel: "me noreferrer" }
           : {})}
-        className="group flex items-baseline justify-between gap-5 py-5"
+        className="group flex items-baseline justify-between gap-5 py-5 transition-colors"
       >
         <span className="flex-none text-xs font-semibold tracking-[0.12em] text-fg-muted uppercase">
           {label}

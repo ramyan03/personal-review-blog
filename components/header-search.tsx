@@ -35,7 +35,7 @@ export default function HeaderSearch() {
       }}
       className="order-last w-full min-w-0 sm:order-none sm:w-auto sm:flex-1 sm:max-w-[300px]"
     >
-      <label className="flex items-center gap-2 rounded-full border border-hairline bg-surface px-3.5 py-2 transition-colors focus-within:border-accent">
+      <label className="flex items-center gap-2 border-b border-hairline pb-2 transition-colors focus-within:border-accent">
         <span className="flex-none text-fg-faint">
           <SearchIcon />
         </span>

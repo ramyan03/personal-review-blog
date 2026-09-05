@@ -12,7 +12,7 @@ export default async function ReviewsPage() {
 
   return (
     <main className="pb-20 lg:pb-[120px]">
-      <div className="px-5 pt-1 pb-5 sm:px-10 lg:px-[72px] lg:pb-2">
+      <div className="mx-auto max-w-[1420px] px-5 pt-1 pb-5 sm:px-10 lg:px-[72px] lg:pb-2">
         <h1 className="m-0 font-serif text-xl leading-[1.15] font-medium tracking-[-0.01em] text-fg-bright lg:text-2xl">
           Reviews
         </h1>
