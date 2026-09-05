@@ -36,14 +36,16 @@ const NAV = [
  * landing it floats over the hero and fades in once you start scrolling,
  * because the hero is meant to be met on its own.
  */
-export default function SiteHeader({
-  reviews,
-  floating = false,
-}: {
-  reviews: Review[];
-  floating?: boolean;
-}) {
+export default function SiteHeader({ reviews }: { reviews: Review[] }) {
   const pathname = usePathname();
+
+  /*
+   * The landing page is met on its own, so there the bar floats over the hero
+   * and fades in once you scroll. Everywhere else it is simply there. This is
+   * read from the route rather than passed in, because one layout now renders
+   * the header for every page.
+   */
+  const floating = pathname === "/";
   const activeIndex = NAV.findIndex((item) => pathname.startsWith(item.match));
   const rule = useSlidingRule<HTMLAnchorElement>(activeIndex);
 

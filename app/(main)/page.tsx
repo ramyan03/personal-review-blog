@@ -1,17 +1,24 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import SiteHeader from "@/components/site-header";
 import PosterWall from "@/components/poster-wall";
 import Reveal from "@/components/reveal";
 import ScrollDown from "@/components/scroll-down";
 import SocialLinks from "@/components/social-links";
 import GenreSection from "@/components/genre-section";
 import ReviewIndex from "@/components/review-index";
-import SiteFooter from "@/components/site-footer";
 import HashTarget from "@/components/hash-target";
 import { GENRES, type Genre } from "@/lib/genre";
 import type { Review } from "@/lib/format";
 import { getLandingQuote, getReviews } from "@/lib/reviews";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import type { Metadata } from "next";
+
+/* absolute, or the shared template would render "Ramyan Reviews . Ramyan Reviews". */
+export const metadata: Metadata = {
+  title: { absolute: SITE_NAME },
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+};
 
 /*
  * The landing page runs: hero, quote, one panel per genre, then the review
@@ -45,7 +52,6 @@ export default async function LandingPage() {
   return (
     <>
       <HashTarget />
-      <SiteHeader reviews={reviews} floating />
 
       <main>
         {/* Hero */}
@@ -159,8 +165,6 @@ export default async function LandingPage() {
           </Suspense>
         </section>
       </main>
-
-      <SiteFooter />
     </>
   );
 }

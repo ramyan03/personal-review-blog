@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { fontVariables } from "@/lib/fonts";
+import { THEME_SCRIPT } from "@/lib/theme";
 import { getReviews } from "@/lib/reviews";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import "../globals.css";
@@ -29,18 +30,25 @@ export const metadata: Metadata = {
 };
 
 /**
- * Stamps a saved theme choice on <html> before the first paint, so a reader who
- * picked light does not get a frame of dark on every navigation.
+ * One layout over the whole site.
+ *
+ * The landing page and everything else used to sit in separate route groups
+ * with a root layout each. Next treats a move between two root layouts as a
+ * document navigation, not a client one, so going from Contact to the reviews
+ * reloaded the page: fonts re-evaluated, the theme script re-ran, and you saw
+ * it blink. About to Contact was smooth only because both happened to live in
+ * the same group. Prefetching cannot help with that; the split had to go.
+ *
+ * The header decides for itself whether to float, so it does not need a prop
+ * that only the landing route could have passed.
  */
-const THEME_SCRIPT = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.dataset.theme=t}}catch(e){}`;
-
-export default async function SiteLayout({
+export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // The header's search box matches against the whole list as you type, so the
-  // layout hands it every review once rather than each page fetching its own.
+  // The header's search matches against the whole list as you type, so the
+  // layout fetches it once rather than each page fetching its own.
   const reviews = await getReviews();
 
   return (

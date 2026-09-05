@@ -570,14 +570,20 @@ html {
  * The spec allows the viewport to rest anywhere inside an oversized area, so it
  * scrolls freely once you are in it instead of fighting to re-centre.
  */
-.landing-scroll {
+/*
+ * Snapping applies to the one page built out of full screen panels. It used to
+ * be switched on by a class the landing layout put on <html>, but there is one
+ * layout for the whole site now, so the page says so itself: the root snaps
+ * only while it actually contains panels.
+ */
+html:has(.panel) {
   /* Panel to panel movement is animated in lib/scroll-to-panel.ts, so the root
      is deliberately left on instant scrolling. */
   scroll-behavior: auto;
   scroll-snap-type: y mandatory;
 }
 
-.landing-scroll .panel {
+html:has(.panel) .panel {
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }
@@ -616,7 +622,7 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .landing-scroll {
+  html:has(.panel) {
     scroll-behavior: auto;
     scroll-snap-type: none;
   }
