@@ -6,6 +6,7 @@
   --color-rule: oklch(0.3 0.01 55);
   --color-hairline: oklch(0.32 0.01 55);
   --color-row: oklch(0.26 0.01 55);
+  --color-shelf: oklch(0.195 0.008 55);
 
   --color-fg: oklch(0.93 0.006 55);
   --color-fg-bright: oklch(0.96 0.006 55);
@@ -21,12 +22,150 @@
 
   --color-accent: #c9a15a;
 
+  /*
+   * Genre colour is one hue per genre (Books 145, Film 255, Anime 15) with the
+   * lightness and chroma living here, so the two themes tint the same system
+   * differently instead of each carrying its own hardcoded palette.
+   */
+  --genre-poster-l: 0.24;
+  --genre-poster-c: 0.03;
+  --genre-letter-l: 0.9;
+  --genre-letter-c: 0.05;
+  --genre-pill-l: 0.82;
+  --genre-pill-c: 0.09;
+  --genre-pill-bg-a: 0.14;
+  --genre-pill-border-a: 0.35;
+  --genre-panel-l: 0.24;
+  --genre-panel-c: 0.03;
+  --genre-panel-a: 0.5;
+  --genre-head-l: 0.95;
+  --genre-head-c: 0.02;
+  --genre-stat-l: 0.65;
+  --genre-stat-c: 0.02;
+
   --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-work-sans), system-ui, -apple-system, sans-serif;
+
+  /*
+   * The whole type scale: six steps plus one display size. Every piece of
+   * text on the site picks one of these, and nothing uses an arbitrary pixel
+   * value. The only exceptions are decorative: the oversized initial on a
+   * cover and the drop cap on a review, which are drawings, not text.
+   */
+  --text-xs: 12px; /* uppercase micro-labels: nav, pills, buttons, meta */
+  --text-sm: 14px; /* dates, secondary meta, card excerpts */
+  --text-base: 16px; /* card titles, interface prose */
+  --text-lg: 19px; /* review body, page intros */
+  --text-xl: 28px; /* section headings, page titles on small screens */
+  --text-2xl: 40px; /* page titles */
+  --text-display: clamp(40px, 7vw, 82px); /* the home page headline, only */
 }
 
 :root {
   color-scheme: dark;
+}
+
+/*
+ * Light theme. The site is dark by default and follows the operating system
+ * unless the reader picks a side, which stamps data-theme on <html>.
+ */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+
+    --color-ink: oklch(0.972 0.007 85);
+    --color-surface: oklch(1 0 0);
+    --color-rule: oklch(0.86 0.012 85);
+    --color-hairline: oklch(0.9 0.01 85);
+    --color-row: oklch(0.91 0.01 85);
+    --color-shelf: oklch(0.945 0.008 85);
+
+    --color-fg: oklch(0.31 0.012 55);
+    --color-fg-bright: oklch(0.21 0.014 55);
+    --color-fg-title: oklch(0.25 0.014 55);
+    --color-fg-body: oklch(0.33 0.012 55);
+    --color-fg-quote: oklch(0.45 0.014 55);
+    --color-fg-muted: oklch(0.47 0.014 55);
+    --color-fg-soft: oklch(0.51 0.014 55);
+    --color-fg-excerpt: oklch(0.49 0.014 55);
+    --color-fg-faint: oklch(0.54 0.014 55);
+    --color-fg-dim: oklch(0.56 0.014 55);
+    --color-star-empty: oklch(0.81 0.012 55);
+
+    --color-accent: #8a6520;
+
+    --genre-poster-l: 0.9;
+    --genre-poster-c: 0.045;
+    --genre-letter-l: 0.46;
+    --genre-letter-c: 0.1;
+    --genre-pill-l: 0.45;
+    --genre-pill-c: 0.11;
+    --genre-pill-bg-a: 0.1;
+    --genre-pill-border-a: 0.28;
+    --genre-panel-l: 0.92;
+    --genre-panel-c: 0.038;
+    --genre-panel-a: 0.85;
+    --genre-head-l: 0.36;
+    --genre-head-c: 0.09;
+    --genre-stat-l: 0.5;
+    --genre-stat-c: 0.05;
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --color-ink: oklch(0.972 0.007 85);
+  --color-surface: oklch(1 0 0);
+  --color-rule: oklch(0.86 0.012 85);
+  --color-hairline: oklch(0.9 0.01 85);
+  --color-row: oklch(0.91 0.01 85);
+  --color-shelf: oklch(0.945 0.008 85);
+
+  --color-fg: oklch(0.31 0.012 55);
+  --color-fg-bright: oklch(0.21 0.014 55);
+  --color-fg-title: oklch(0.25 0.014 55);
+  --color-fg-body: oklch(0.33 0.012 55);
+  --color-fg-quote: oklch(0.45 0.014 55);
+  --color-fg-muted: oklch(0.47 0.014 55);
+  --color-fg-soft: oklch(0.51 0.014 55);
+  --color-fg-excerpt: oklch(0.49 0.014 55);
+  --color-fg-faint: oklch(0.54 0.014 55);
+  --color-fg-dim: oklch(0.56 0.014 55);
+  --color-star-empty: oklch(0.81 0.012 55);
+
+  --color-accent: #8a6520;
+
+  --genre-poster-l: 0.9;
+  --genre-poster-c: 0.045;
+  --genre-letter-l: 0.46;
+  --genre-letter-c: 0.1;
+  --genre-pill-l: 0.45;
+  --genre-pill-c: 0.11;
+  --genre-pill-bg-a: 0.1;
+  --genre-pill-border-a: 0.28;
+  --genre-panel-l: 0.92;
+  --genre-panel-c: 0.038;
+  --genre-panel-a: 0.85;
+  --genre-head-l: 0.36;
+  --genre-head-c: 0.09;
+  --genre-stat-l: 0.5;
+  --genre-stat-c: 0.05;
+}
+
+/*
+ * Short pages (Contact) have no scrollbar and tall ones do. Without a reserved
+ * gutter the whole layout jumps sideways as you move between them.
+ */
+html {
+  scrollbar-gutter: stable;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }
 
 ::selection {
@@ -91,7 +230,6 @@
   .reveal {
     opacity: 1;
     transform: none;
-    transition: none;
   }
 
   .scroll-cue {
@@ -103,7 +241,7 @@
 
 .review-body {
   font-family: var(--font-serif);
-  font-size: 19px;
+  font-size: var(--text-lg);
   line-height: 1.75;
   color: var(--color-fg-body);
 }
@@ -138,15 +276,22 @@
 }
 
 .review-body h1 {
-  font-size: 30px;
+  font-size: var(--text-xl);
 }
 
 .review-body h2 {
-  font-size: 25px;
+  font-size: var(--text-lg);
+  font-weight: 600;
 }
 
+/* Smallest heading drops to a label rather than inventing a seventh size. */
 .review-body h3 {
-  font-size: 21px;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-fg-muted);
 }
 
 /* Pull-quote treatment: centered and italic, deliberately without a left rule. */
@@ -156,7 +301,7 @@
   padding: 0;
   border: 0;
   font-style: italic;
-  font-size: 21px;
+  font-size: var(--text-lg);
   line-height: 1.6;
   text-align: center;
   color: var(--color-fg-quote);
@@ -211,4 +356,45 @@
   padding: 0;
   color: inherit;
   font-weight: inherit;
+}
+
+/* --- Theme toggle glyph --- */
+
+/* Dark ground: offer the sun. Light ground: offer the moon. */
+.theme-icon-light {
+  display: none;
+}
+
+.theme-icon-dark {
+  display: none;
+}
+
+:root .theme-icon-light {
+  display: inline;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .theme-icon-light {
+    display: none;
+  }
+
+  :root:not([data-theme="dark"]) .theme-icon-dark {
+    display: inline;
+  }
+}
+
+:root[data-theme="light"] .theme-icon-light {
+  display: none;
+}
+
+:root[data-theme="light"] .theme-icon-dark {
+  display: inline;
+}
+
+:root[data-theme="dark"] .theme-icon-light {
+  display: inline;
+}
+
+:root[data-theme="dark"] .theme-icon-dark {
+  display: none;
 }

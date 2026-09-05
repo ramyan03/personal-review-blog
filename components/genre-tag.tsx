@@ -12,8 +12,8 @@ export default function GenreTag({
     <span
       className={
         size === "md"
-          ? "inline-flex items-center rounded-full border px-[11px] py-[5px] text-[10px] font-semibold tracking-[0.08em] uppercase"
-          : "inline-flex items-center rounded-full border px-[9px] py-[4px] text-[10px] font-semibold tracking-[0.08em] uppercase"
+          ? "inline-flex items-center rounded-full border px-[11px] py-[5px] text-xs font-semibold tracking-[0.08em] uppercase"
+          : "inline-flex items-center rounded-full border px-[9px] py-[4px] text-xs font-semibold tracking-[0.08em] uppercase"
       }
       style={{
         background: theme.pillBg,
