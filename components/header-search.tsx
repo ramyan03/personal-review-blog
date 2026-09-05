@@ -21,8 +21,17 @@ export default function HeaderSearch({ reviews }: { reviews: Review[] }) {
   const [value, setValue] = useState("");
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
+  // Mobile only: the input is hidden behind its own icon until asked for.
+  const [expanded, setExpanded] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const listId = useId();
+
+  // Opening the row on a phone should put the cursor in it, or the icon has
+  // just cost you a tap.
+  useEffect(() => {
+    if (expanded) inputRef.current?.focus();
+  }, [expanded]);
 
   // Keep the box in step with the URL, including back and forward navigation.
   useEffect(() => {
@@ -91,10 +100,29 @@ export default function HeaderSearch({ reviews }: { reviews: Review[] }) {
   const showList = open && value.trim().length >= 2;
 
   return (
-    <div
-      ref={boxRef}
-      className="relative order-last w-full min-w-0 sm:order-none sm:w-auto sm:max-w-[300px] sm:flex-1"
-    >
+    <>
+      {/*
+        A full width input is the widest thing in the bar, and on a phone it
+        forced the header onto a third line that then stayed there, sticky, for
+        the whole page. Below the small breakpoint it collapses to its own icon
+        and only takes a row once you actually want to search.
+      */}
+      <button
+        type="button"
+        onClick={() => setExpanded((open) => !open)}
+        aria-expanded={expanded}
+        aria-label="Search reviews"
+        className="flex-none p-1 text-fg-muted transition-colors hover:text-fg sm:hidden"
+      >
+        <SearchIcon />
+      </button>
+
+      <div
+        ref={boxRef}
+        className={`relative order-last w-full min-w-0 sm:order-none sm:block sm:w-auto sm:max-w-[300px] sm:flex-1 ${
+          expanded ? "block" : "hidden"
+        }`}
+      >
       <form
         role="search"
         onSubmit={(event) => {
@@ -108,6 +136,7 @@ export default function HeaderSearch({ reviews }: { reviews: Review[] }) {
             <SearchIcon />
           </span>
           <input
+            ref={inputRef}
             type="search"
             value={value}
             onChange={(event) => {
@@ -204,6 +233,7 @@ export default function HeaderSearch({ reviews }: { reviews: Review[] }) {
           )}
         </div>
       ) : null}
-    </div>
+      </div>
+    </>
   );
 }

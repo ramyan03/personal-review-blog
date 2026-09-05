@@ -52,12 +52,23 @@ export default function SiteHeader({
   }, [floating]);
 
   return (
+    /*
+     * Two positioning modes, one appearance. The bar used to be laid out
+     * differently in each: floating it spanned the full width, in flow it was
+     * centred inside the 1420px cap, so the wordmark landed in a different
+     * place depending on which page you were on, and the switch between them
+     * on navigation read as a flicker.
+     *
+     * Both now share the same inner container and padding. Off the landing
+     * page it is sticky rather than fixed, so it stays in the flow and nothing
+     * has to be padded out from underneath it.
+     */
     <header
-      className={
+      className={`z-20 border-b border-rule bg-ink/85 backdrop-blur-[10px] ${
         floating
-          ? "fixed inset-x-0 top-0 z-20 flex items-center gap-x-6 gap-y-4 border-b border-rule bg-ink/85 px-5 py-[18px] backdrop-blur-[10px] transition-[opacity,transform] duration-500 sm:px-10 lg:px-[72px]"
-          : "mx-auto flex w-full max-w-[1420px] flex-wrap items-center gap-x-6 gap-y-4 px-5 pt-7 pb-5 sm:px-10 lg:px-[72px] lg:pt-10 lg:pb-7"
-      }
+          ? "fixed inset-x-0 top-0 transition-[opacity,transform] duration-500"
+          : "sticky top-0"
+      }`}
       style={
         floating
           ? {
@@ -68,51 +79,60 @@ export default function SiteHeader({
           : undefined
       }
     >
-      <Link
-        href="/"
-        className="flex-none font-serif text-base font-medium text-fg-title italic transition-colors hover:text-accent"
-      >
-        Ramyan Reviews
-      </Link>
-
-      {/* Reads the query string, so it needs its own boundary to keep every
-          page in this layout statically prerenderable. */}
-      <Suspense fallback={<div className="sm:max-w-[300px] sm:flex-1" />}>
-        <HeaderSearch reviews={reviews} />
-      </Suspense>
-
-      <div className="ml-auto flex flex-none items-center gap-5 sm:gap-7 lg:gap-9">
-        <nav
-          ref={rule.trackRef as React.RefObject<HTMLElement>}
-          className="relative flex items-center gap-5 sm:gap-7 lg:gap-9"
+      <div className="mx-auto flex w-full max-w-[1420px] flex-wrap items-center gap-x-5 gap-y-4 px-5 py-[18px] sm:min-h-[29px] sm:gap-x-6 sm:px-10 lg:px-[72px]">
+        <Link
+          href="/"
+          className="flex-none font-serif text-base font-medium text-fg-title italic transition-colors hover:text-accent"
         >
-          {NAV.map((item, index) => (
-            <Link
-              key={item.href}
-              ref={(node) => {
-                rule.itemRefs.current[index] = node;
-              }}
-              href={item.href}
-              aria-current={index === activeIndex ? "page" : undefined}
-              className={
-                index === activeIndex
-                  ? "text-xs font-semibold tracking-[0.12em] text-accent uppercase"
-                  : "text-xs font-semibold tracking-[0.12em] text-fg-muted uppercase transition-colors hover:text-fg"
-              }
-            >
-              {item.label}
-            </Link>
-          ))}
+          Ramyan Reviews
+        </Link>
 
-          {/* One rule for the whole nav, so switching pages slides it across. */}
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -bottom-[7px] left-0 h-[2px] bg-accent"
-            style={rule.style}
-          />
-        </nav>
+        {/* Reads the query string, so it needs its own boundary to keep every
+            page in this layout statically prerenderable. */}
+        <Suspense
+          fallback={
+            /* Same height as the resolved search box. Without it the bar was
+               4px shorter until search hydrated, and that shift was the
+               flicker on arrival. */
+            <div className="hidden h-[29px] sm:block sm:max-w-[300px] sm:flex-1" />
+          }
+        >
+          <HeaderSearch reviews={reviews} />
+        </Suspense>
 
-        <ThemeToggle />
+        <div className="ml-auto flex flex-none items-center gap-4 sm:gap-7 lg:gap-9">
+          <nav
+            ref={rule.trackRef as React.RefObject<HTMLElement>}
+            className="relative flex items-center gap-4 sm:gap-7 lg:gap-9"
+          >
+            {NAV.map((item, index) => (
+              <Link
+                key={item.href}
+                ref={(node) => {
+                  rule.itemRefs.current[index] = node;
+                }}
+                href={item.href}
+                aria-current={index === activeIndex ? "page" : undefined}
+                className={
+                  index === activeIndex
+                    ? "text-xs font-semibold tracking-[0.1em] text-accent uppercase sm:tracking-[0.12em]"
+                    : "text-xs font-semibold tracking-[0.1em] text-fg-muted uppercase transition-colors hover:text-fg sm:tracking-[0.12em]"
+                }
+              >
+                {item.label}
+              </Link>
+            ))}
+
+            {/* One rule for the whole nav, so switching pages slides it across. */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-[7px] left-0 h-[2px] bg-accent"
+              style={rule.style}
+            />
+          </nav>
+
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

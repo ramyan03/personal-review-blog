@@ -98,7 +98,7 @@ export default async function ReviewPage({ params }: Params) {
         {newer ? (
           <Link
             href={`/reviews/${newer.slug}`}
-            className="max-w-[45%] truncate transition-colors hover:text-fg"
+            className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-normal [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:1] transition-colors hover:text-fg"
           >
             ← {newer.title}
           </Link>
@@ -108,7 +108,7 @@ export default async function ReviewPage({ params }: Params) {
         {older ? (
           <Link
             href={`/reviews/${older.slug}`}
-            className="max-w-[45%] truncate text-right transition-colors hover:text-fg"
+            className="min-w-0 flex-1 overflow-hidden text-right text-ellipsis whitespace-normal [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:1] transition-colors hover:text-fg"
           >
             {older.title} →
           </Link>
