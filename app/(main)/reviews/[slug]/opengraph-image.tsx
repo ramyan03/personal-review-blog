@@ -7,24 +7,13 @@ import { byline } from "@/lib/format";
 import { ogFonts, SANS, SERIF } from "@/lib/og-fonts";
 import { SITE_NAME } from "@/lib/site";
 
+/* Build it once per review, at build time. Without this the route is treated
+   as dynamic and runs in a function with no content/ or public/ to read. */
+export const dynamic = "force-static";
+
+export const alt = "A review on " + SITE_NAME;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-
-export async function generateImageMetadata({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const review = await getReview(params.slug);
-  return [
-    {
-      id: "card",
-      size,
-      contentType,
-      alt: review ? `${review.title}, reviewed by Ramyan Chelva` : SITE_NAME,
-    },
-  ];
-}
 
 /**
  * A review's own card: the artwork beside the title, rating and opening line.
@@ -37,11 +26,20 @@ export async function generateImageMetadata({
  * The image is read off disk and inlined, because at build time there is no
  * server to fetch it from over HTTP.
  */
-export default async function Image({ params }: { params: { slug: string } }) {
-  const [review, fonts] = await Promise.all([
-    getReview(params.slug),
-    ogFonts(),
-  ]);
+/*
+ * Prerendered for every slug at build time, where content/ and public/ both
+ * exist. It previously carried a generateImageMetadata export, which adds a
+ * [__metadata_id__] segment and makes the route dynamic: it then ran per
+ * request inside a function that has neither directory, the reader found no
+ * review, and the card came out blank. The slugs come from the page.
+ */
+export default async function Image({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const [review, fonts] = await Promise.all([getReview(slug), ogFonts()]);
 
   if (!review) {
     return new ImageResponse(<div style={{ background: "#141414" }} />, size);

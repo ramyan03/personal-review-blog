@@ -20,12 +20,15 @@ async function fetchFace(
   try {
     const css = await fetch(`https://fonts.googleapis.com/css2?family=${query}`, {
       headers: { "User-Agent": "Mozilla/5.0" },
+      cache: "force-cache",
     }).then((response) => response.text());
 
     const url = css.match(/src: url\((https:[^)]+\.ttf)\)/)?.[1];
     if (!url) return null;
 
-    const data = await fetch(url).then((response) => response.arrayBuffer());
+    const data = await fetch(url, { cache: "force-cache" }).then((response) =>
+      response.arrayBuffer(),
+    );
     return { name, data, weight, style };
   } catch {
     return null;
