@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { DocumentRenderer } from "@keystatic/core/renderer";
 import Cover from "@/components/cover";
+import ReviewBody from "@/components/review-body";
 import GenreTag from "@/components/genre-tag";
 import MoreInGenre from "@/components/more-in-genre";
 import Stars, { formatRating } from "@/components/stars";
@@ -12,6 +12,7 @@ import { byline, formatDate } from "@/lib/format";
 import { getReview, getReviews } from "@/lib/reviews";
 import { REVIEWS_HREF } from "@/lib/links";
 import { SITE_NAME } from "@/lib/site";
+import { artworkDimensions } from "@/lib/artwork";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -60,7 +61,7 @@ export default async function ReviewPage({ params }: Params) {
   const review = await getReview(slug);
   if (!review) notFound();
 
-  const all = await getReviews();
+  const [all, sizes] = await Promise.all([getReviews(), artworkDimensions()]);
   const index = all.findIndex((item) => item.slug === slug);
   const newer = index > 0 ? all[index - 1] : null;
   const older = index >= 0 && index < all.length - 1 ? all[index + 1] : null;
@@ -87,6 +88,7 @@ export default async function ReviewPage({ params }: Params) {
           genre={review.genre}
           cover={review.cover}
           className="w-[132px] flex-none sm:w-[168px]"
+          priority
           letterClassName="text-[64px]"
           sizes="(min-width: 640px) 168px, 132px"
         />
@@ -117,9 +119,7 @@ export default async function ReviewPage({ params }: Params) {
         </div>
       </div>
 
-      <article className="review-body">
-        <DocumentRenderer document={review.body} />
-      </article>
+      <ReviewBody document={review.body} sizes={sizes} />
 
       <MoreInGenre genre={review.genre} currentSlug={slug} reviews={all} />
 

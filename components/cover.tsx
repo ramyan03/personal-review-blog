@@ -13,6 +13,7 @@ export default function Cover({
   className = "",
   letterClassName = "",
   ring = false,
+  priority = false,
   sizes = "(min-width: 1280px) 20vw, (min-width: 640px) 30vw, 40vw",
 }: {
   title: string;
@@ -21,6 +22,8 @@ export default function Cover({
   className?: string;
   letterClassName?: string;
   ring?: boolean;
+  /** Set on artwork that is above the fold, so it is not deferred. */
+  priority?: boolean;
   sizes?: string;
 }) {
   const theme = genreTheme(genre);
@@ -39,7 +42,8 @@ export default function Cover({
         <img
           src={cover}
           alt={`Cover art for ${title}`}
-          loading="lazy"
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : undefined}
           decoding="async"
           sizes={sizes}
           className="absolute inset-0 h-full w-full object-cover"
