@@ -2,14 +2,25 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { ImageResponse } from "next/og";
 import { getReview } from "@/lib/reviews";
+import { reader } from "@/lib/reader";
 import { formatRating } from "@/components/stars";
 import { byline } from "@/lib/format";
 import { ogFonts, SANS, SERIF } from "@/lib/og-fonts";
 import { SITE_NAME } from "@/lib/site";
 
-/* Build it once per review, at build time. Without this the route is treated
-   as dynamic and runs in a function with no content/ or public/ to read. */
 export const dynamic = "force-static";
+
+/*
+ * The slugs have to be listed here, not just on the page. Without them the
+ * build produced no cards at all: the first request generated one inside a
+ * function that has neither content/ nor public/, so the review came back
+ * empty, and the blank result was then cached. Listing them builds all 21 on
+ * the machine that has the files.
+ */
+export async function generateStaticParams() {
+  const slugs = await reader.collections.reviews.list();
+  return slugs.map((slug) => ({ slug }));
+}
 
 export const alt = "A review on " + SITE_NAME;
 export const size = { width: 1200, height: 630 };
