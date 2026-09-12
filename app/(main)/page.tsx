@@ -9,6 +9,7 @@ import SocialLinks from "@/components/social-links";
 import GenreSection from "@/components/genre-section";
 import ReviewIndex from "@/components/review-index";
 import HashTarget from "@/components/hash-target";
+import SnapScope from "@/components/snap-scope";
 import { GENRES, type Genre } from "@/lib/genre";
 import type { Review } from "@/lib/format";
 import { getLandingQuote, getReviews } from "@/lib/reviews";
@@ -54,6 +55,7 @@ export default async function LandingPage() {
   return (
     <>
       <HashTarget />
+      <SnapScope untilId="all-reviews" />
 
       <main>
         {/* Hero */}

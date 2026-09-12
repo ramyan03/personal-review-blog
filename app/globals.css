@@ -595,31 +595,30 @@ html:has(.panel) {
      is deliberately left on instant scrolling. */
   scroll-behavior: auto;
   /*
-   * Mandatory, deliberately. Proximity was tried and is not the same thing:
-   * Chrome's threshold is tight enough that the panels effectively stopped
-   * snapping, which is the whole beat of the landing page.
+   * Mandatory, deliberately: proximity is not the same thing, because Chrome's
+   * threshold is tight enough that the panels effectively stop snapping, and
+   * the panel beat is the landing page.
+   *
+   * Gated on data-snap, which components/snap-scope.tsx sets to "on" only
+   * while the scroll is up among the panels. Below that it is off, so the
+   * index scrolls like the long list it is, the footer is reachable, and
+   * coming back from a review the restored scroll position is left alone
+   * instead of being pulled to the index's own snap point.
+   *
+   * Off is the default rather than on. Scroll restoration runs before any
+   * script, so snapping has to be absent at that moment; switching it off
+   * afterwards is already too late and shows as a flick.
    */
+  scroll-snap-type: none;
+}
+
+html:has(.panel)[data-snap="on"] {
   scroll-snap-type: y mandatory;
 }
 
-html:has(.panel) .panel {
+html:has(.panel)[data-snap="on"] .panel {
   scroll-snap-align: start;
   scroll-snap-stop: always;
-}
-
-/*
- * The footer needs a snap point of its own.
- *
- * It is not a panel, so under mandatory snapping it sat past the last snap
- * point with nowhere for the scroll to come to rest, and was unreachable. The
- * index above it is taller than the viewport, which browsers let you scroll
- * through freely, so the only thing missing was somewhere to land at the end.
- * Aligned to its end rather than its start, because the footer is shorter than
- * a screen and should settle at the bottom of the page rather than pull itself
- * up to the top of one.
- */
-html:has(.panel) footer {
-  scroll-snap-align: end;
 }
 
 /*
