@@ -437,8 +437,8 @@ html {
 .genre-drift-1 {
   top: 12%;
   left: 4%;
-  width: 15%;
-  max-width: 190px;
+  width: 20%;
+  max-width: 251px;
   animation-delay: 0s;
 }
 
@@ -449,8 +449,8 @@ html {
 .genre-drift-2 {
   top: 50%;
   left: 17%;
-  width: 12%;
-  max-width: 155px;
+  width: 16%;
+  max-width: 205px;
   animation-delay: -3.6s;
 }
 
@@ -461,8 +461,8 @@ html {
 .genre-drift-3 {
   top: 6%;
   left: 33%;
-  width: 11%;
-  max-width: 140px;
+  width: 15%;
+  max-width: 185px;
   animation-delay: -7.2s;
 }
 
@@ -473,8 +473,8 @@ html {
 .genre-drift-4 {
   top: 54%;
   right: 31%;
-  width: 12%;
-  max-width: 155px;
+  width: 16%;
+  max-width: 205px;
   animation-delay: -10.8s;
 }
 
@@ -485,8 +485,8 @@ html {
 .genre-drift-5 {
   top: 10%;
   right: 15%;
-  width: 14%;
-  max-width: 180px;
+  width: 18%;
+  max-width: 238px;
   animation-delay: -14.4s;
 }
 
@@ -497,8 +497,8 @@ html {
 .genre-drift-6 {
   top: 52%;
   right: 3%;
-  width: 12%;
-  max-width: 155px;
+  width: 16%;
+  max-width: 205px;
   animation-delay: -18s;
 }
 
@@ -594,12 +594,34 @@ html:has(.panel) {
   /* Panel to panel movement is animated in lib/scroll-to-panel.ts, so the root
      is deliberately left on instant scrolling. */
   scroll-behavior: auto;
-  scroll-snap-type: y mandatory;
+  /*
+   * Proximity, not mandatory.
+   *
+   * Mandatory means every rest position has to be a snap point, which is right
+   * for the screen-sized panels and wrong for everything after them. The index
+   * is long content, not a panel: snapped hard to its start, one wheel gesture
+   * cleared the whole filter header, and the footer sat past the last snap
+   * point where the scroll could never come to rest, so it was unreachable.
+   *
+   * Proximity keeps the beat, because a panel still pulls the scroll in when
+   * you come near it and scroll-snap-stop below still refuses to let you skip
+   * one, while anything taller than a screen scrolls like normal content.
+   */
+  scroll-snap-type: y proximity;
 }
 
 html:has(.panel) .panel {
   scroll-snap-align: start;
   scroll-snap-stop: always;
+}
+
+/*
+ * The index is where the panels stop. It carries .panel for the layout it
+ * shares with them, but it is a long list and must not behave like a screen.
+ */
+html:has(.panel) #all-reviews {
+  scroll-snap-align: none;
+  scroll-snap-stop: normal;
 }
 
 /*
@@ -821,10 +843,18 @@ html:has(.panel) .panel {
     max-width: 934px; /* 190 rail + 64 gutter + 680 measure */
   }
 
+  /*
+   * Three tracks, not two. The rail and the writing alone left the column
+   * sitting right of centre, because the rail plus its gutter was only ever
+   * added to the left. An empty track of the same width on the right balances
+   * it, so the writing is centred in the viewport and the rail still hangs in
+   * the margin beside it.
+   */
   .review-offset {
     display: grid;
-    grid-template-columns: 190px minmax(0, 680px);
+    grid-template-columns: 190px minmax(0, 680px) 190px;
     gap: 64px;
+    justify-content: center;
   }
 }
 

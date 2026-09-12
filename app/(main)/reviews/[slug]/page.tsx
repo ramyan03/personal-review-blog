@@ -6,7 +6,7 @@ import ReviewBody from "@/components/review-body";
 import GenreTag from "@/components/genre-tag";
 import MoreInGenre from "@/components/more-in-genre";
 import Stars, { formatRating } from "@/components/stars";
-import { ArrowLeftIcon } from "@/components/icons";
+import BackToIndex from "@/components/back-to-index";
 import { reader } from "@/lib/reader";
 import { byline, formatDate } from "@/lib/format";
 import { readsUrl } from "@/lib/reads";
@@ -70,19 +70,13 @@ export default async function ReviewPage({ params }: Params) {
 
   return (
     <main className="review-page mx-auto px-5 pt-8 pb-24 sm:px-6 lg:pt-12 lg:pb-[140px]">
-      <Link
-        href={REVIEWS_HREF}
-        className="mb-10 inline-flex items-center gap-2 text-xs tracking-[0.1em] text-fg-soft uppercase transition-colors hover:text-fg lg:mb-14"
-      >
-        <ArrowLeftIcon />
-        All reviews
-      </Link>
+      <BackToIndex className="mb-10 inline-flex items-center gap-2 text-xs tracking-[0.1em] text-fg-soft uppercase transition-colors hover:text-fg lg:mb-14" />
 
       {/*
-        The writing sits right of centre, and the margin it vacates carries a
-        running rail. AI in Design starts its body column at x=533 in a 1272px
-        viewport and leaves the whole left half empty; none of the award sites
-        centre a text column.
+        The writing is centred, with a running rail hanging in the left margin.
+        The rail used to push the column right of centre, because its track and
+        gutter were only ever added on one side; an empty track of the same
+        width on the right now balances it.
 
         The rail is not a copy of the header beside it. The header is read once
         on arrival and then scrolled past, so on a long review nothing on

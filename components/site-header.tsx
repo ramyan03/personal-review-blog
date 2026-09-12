@@ -21,10 +21,24 @@ import { useSlidingRule } from "@/lib/use-sliding-rule";
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
+/*
+ * A predicate rather than a prefix, because the index does not live at
+ * /reviews. It is the foot of the landing page, so on "/" the pathname matched
+ * nothing and Reviews was the one item that never underlined, on the very page
+ * it points at.
+ */
 const NAV = [
-  { href: REVIEWS_HREF, label: "Reviews", match: "/reviews" },
-  { href: "/about", label: "About", match: "/about" },
-  { href: "/contact", label: "Contact", match: "/contact" },
+  {
+    href: REVIEWS_HREF,
+    label: "Reviews",
+    isActive: (path: string) => path === "/" || path.startsWith("/reviews"),
+  },
+  { href: "/about", label: "About", isActive: (path: string) => path.startsWith("/about") },
+  {
+    href: "/contact",
+    label: "Contact",
+    isActive: (path: string) => path.startsWith("/contact"),
+  },
 ];
 
 /**
@@ -46,7 +60,7 @@ export default function SiteHeader({ reviews }: { reviews: Review[] }) {
    * the header for every page.
    */
   const floating = pathname === "/";
-  const activeIndex = NAV.findIndex((item) => pathname.startsWith(item.match));
+  const activeIndex = NAV.findIndex((item) => item.isActive(pathname));
   const rule = useSlidingRule<HTMLAnchorElement>(activeIndex);
 
   const [revealed, setRevealed] = useState(!floating);
@@ -132,8 +146,11 @@ export default function SiteHeader({ reviews }: { reviews: Review[] }) {
       }
     >
       <div className="mx-auto flex w-full max-w-[1420px] flex-wrap items-center gap-x-5 gap-y-4 px-5 py-[18px] sm:min-h-[29px] sm:gap-x-6 sm:px-10 lg:px-[72px]">
+        {/* The wordmark goes to the index, not to the top of the landing page.
+            The hero is met once on arrival; from anywhere else the thing you
+            want back is the list of reviews. */}
         <Link
-          href="/"
+          href={REVIEWS_HREF}
           className="flex-none font-serif text-sm leading-none font-medium text-fg-title italic transition-colors hover:text-accent sm:text-base"
         >
           Ramyan Reviews
