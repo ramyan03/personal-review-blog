@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Eyebrow from "@/components/eyebrow";
 import Reveal from "@/components/reveal";
 import ScrollDown from "@/components/scroll-down";
 import Stars from "@/components/stars";
@@ -65,18 +66,22 @@ export default function GenreSection({
       </Reveal>
 
       <Reveal className="relative z-[1] flex flex-col items-center text-center">
+        {/*
+          The count reads above the name rather than under it. It was already
+          an eyebrow in everything but position: twelve pixels, uppercase,
+          letterspaced, tinted with the genre. Putting it over the heading is
+          what the award sites do with theirs, and it means the panel names
+          itself before it announces its size.
+        */}
+        <Eyebrow tone="inherit" className="mb-5" style={{ color: panel.stat }}>
+          {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
+        </Eyebrow>
         <h2
           className="m-0 font-serif text-display leading-[0.95] font-medium tracking-[-0.02em] italic"
           style={{ color: panel.heading }}
         >
           {genre}
         </h2>
-        <span
-          className="mt-5 text-xs tracking-[0.18em] uppercase"
-          style={{ color: panel.stat }}
-        >
-          {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
-        </span>
         <IndexLink
           genre={genre}
           className="mt-8 inline-flex items-center gap-2 border-b-2 border-accent pb-2 text-xs font-semibold tracking-[0.14em] text-accent uppercase transition-colors hover:text-fg-bright"

@@ -1,5 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import CountBeat from "@/components/count-beat";
+import Eyebrow from "@/components/eyebrow";
 import PosterWall from "@/components/poster-wall";
 import Reveal from "@/components/reveal";
 import ScrollDown from "@/components/scroll-down";
@@ -21,8 +23,8 @@ export const metadata: Metadata = {
 };
 
 /*
- * The landing page runs: hero, quote, one panel per genre, then the review
- * index itself. The index used to be a click away behind a closing panel, which
+ * The landing page runs: hero, quote, the count, one panel per genre, then the
+ * review index itself. The index used to be a click away behind a closing panel, which
  * left no sign that there was anything below the fold; now the page simply
  * keeps going into it. /reviews is kept alive as a redirect here, so old
  * links and ?genre= still work, but there is only one index.
@@ -68,17 +70,34 @@ export default async function LandingPage() {
             <p className="mt-8 max-w-[520px] font-serif text-lg leading-[1.6] text-fg-quote">
               Books, films, and anime, reviewed as I finish them.
             </p>
-            <span className="mt-7 text-xs tracking-[0.18em] text-fg-faint uppercase">
-              {reviews.length} reviews since 2023
-            </span>
             <SocialLinks className="mt-9" />
           </div>
 
-          <div className="absolute bottom-10 z-[1] flex flex-col items-center gap-4">
-            <span className="text-xs tracking-[0.14em] text-fg-faint uppercase">
-              Scroll
-            </span>
-            <ScrollDown targetId="quote" label="Down to the quote" />
+          {/*
+            The corner rail. mesh3d anchors its labels to the four corners and
+            never moves them, which leaves the middle of the screen to the
+            title and makes the hero read as a frame rather than as the top of
+            a page.
+
+            Only the bottom two corners are used. The header is fixed on this
+            route and fades in over the top two as soon as you scroll, so
+            anything put up there would either collide with it or have to
+            duplicate the scroll cue that is already at the foot. The count
+            moved out of the centre column and into the right corner: it now
+            has a whole panel of its own further down, and stating it twice in
+            one screen was neither emphasis nor information.
+          */}
+          <div className="absolute inset-x-0 bottom-10 z-[1] flex items-end justify-between px-6 sm:px-10 lg:px-[72px]">
+            <Eyebrow className="hidden sm:block">Since 2023</Eyebrow>
+
+            <div className="flex flex-1 flex-col items-center gap-4">
+              <Eyebrow>Scroll</Eyebrow>
+              <ScrollDown targetId="quote" label="Down to the quote" />
+            </div>
+
+            <Eyebrow tone="accent" className="hidden sm:block">
+              {reviews.length} reviews
+            </Eyebrow>
           </div>
         </section>
 
@@ -122,10 +141,54 @@ export default async function LandingPage() {
             </Reveal>
 
             <div className="absolute bottom-10">
-              <ScrollDown targetId="books" label="Down to Books" />
+              <ScrollDown targetId="counts" label="Down to the count" />
             </div>
           </section>
         ) : null}
+
+        {/*
+          How much of it there is, given a screen. mesh3d spends a whole
+          viewport on each of its figures and assembles the digits out of a
+          particle field; this is the same beat at the scale a reading site can
+          carry, and it replaces the one line of small caps that used to state
+          the total in the hero.
+        */}
+        <section
+          id="counts"
+          className="panel relative flex min-h-screen flex-col items-center justify-center bg-ink px-6 py-20"
+        >
+          <Reveal className="flex w-full flex-col items-center">
+            <Eyebrow className="mb-12 text-center">Everything so far</Eyebrow>
+            <CountBeat
+              beats={[
+                {
+                  value: reviews.length,
+                  label: "Reviews",
+                  note: "Everything published since 2023.",
+                },
+                {
+                  value: byGenre.Books?.length ?? 0,
+                  label: "Books",
+                  note: "Novels, mostly finished on the GO.",
+                },
+                {
+                  value: byGenre.Film?.length ?? 0,
+                  label: "Film",
+                  note: "Seen in a cinema wherever possible.",
+                },
+                {
+                  value: byGenre.Anime?.length ?? 0,
+                  label: "Anime",
+                  note: "Series and features together.",
+                },
+              ]}
+            />
+          </Reveal>
+
+          <div className="absolute bottom-10">
+            <ScrollDown targetId="books" label="Down to Books" />
+          </div>
+        </section>
 
         {GENRES.map((genre, index) => {
           const next = GENRES[index + 1];
@@ -152,6 +215,7 @@ export default async function LandingPage() {
           className="panel pt-24 pb-20 lg:pt-28 lg:pb-[120px]"
         >
           <div className="mx-auto max-w-[1420px] px-5 sm:px-10 lg:px-[72px]">
+            <Eyebrow className="mb-4">The index</Eyebrow>
             <h2 className="m-0 font-serif text-xl leading-[1.15] font-medium tracking-[-0.01em] text-fg-bright lg:text-2xl">
               Reviews
             </h2>

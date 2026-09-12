@@ -1,0 +1,452 @@
+/*
+ * Styles for /design-notes and nothing else.
+ *
+ * This page is a scratch bench, not part of the site's design system, so it
+ * lives in its own stylesheet imported by the one page that uses it. Deleting
+ * the route deletes the styles with it, and nothing here can leak into a
+ * review.
+ *
+ * Two house rules are broken on purpose in here, both to make a comparison
+ * visible rather than because the page needs them:
+ *
+ *   1. Arbitrary pixel sizes. The site's rule is that every piece of text
+ *      picks one of the seven scale tokens. Section 02 is an argument about
+ *      what those tokens should be, so it has to draw sizes that are not in
+ *      the scale yet.
+ *   2. A candidate eighth token, --dn-micro, at 11px. Section 01 is asking
+ *      whether the scale should gain a step below --text-xs. Nothing outside
+ *      this file may use it until that is decided.
+ */
+
+.dn-page {
+  --dn-micro: 11px;
+  --dn-rail: 168px;
+}
+
+/* --- Section shell ---
+   The rail and the offset body are themselves section 03, so the page is
+   built out of the thing it is proposing. */
+
+.dn-section {
+  display: grid;
+  gap: 20px;
+  padding: 56px 0;
+  border-top: 1px solid var(--color-rule);
+}
+
+@media (min-width: 1000px) {
+  .dn-section {
+    grid-template-columns: var(--dn-rail) minmax(0, 1fr);
+    gap: 56px;
+    padding: 88px 0;
+  }
+
+  .dn-rail {
+    position: sticky;
+    top: 96px;
+    align-self: start;
+  }
+}
+
+.dn-eyebrow {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: var(--dn-micro);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-fg-faint);
+}
+
+.dn-num {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: var(--dn-micro);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- The stage each demo sits on ---
+   A demo has to read as a specimen rather than as part of the page, or you
+   cannot tell which typography is the argument and which is the article. */
+
+.dn-stage {
+  margin-top: 26px;
+  padding: 30px 26px;
+  border: 1px solid var(--color-hairline);
+  border-radius: 3px;
+  background: var(--color-shelf);
+}
+
+.dn-stage-split {
+  display: grid;
+  gap: 30px;
+}
+
+@media (min-width: 760px) {
+  .dn-stage-split {
+    grid-template-columns: 1fr 1fr;
+    gap: 34px;
+  }
+}
+
+.dn-tag {
+  display: block;
+  margin-bottom: 14px;
+  font-family: var(--font-sans);
+  font-size: var(--dn-micro);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-fg-dim);
+}
+
+/* --- 02, the scale comparison ---
+   Specimens are clipped rather than wrapped: the point is the size, and a
+   132px word that wraps to three lines stops reading as one. */
+
+.dn-specimen {
+  display: block;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-style: italic;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--color-fg-bright);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.dn-specimen-now {
+  font-size: clamp(40px, 7vw, 82px);
+}
+
+.dn-specimen-next {
+  font-size: clamp(44px, 9.5vw, 132px);
+}
+
+.dn-ruler {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--color-row);
+  font-family: var(--font-sans);
+  font-size: var(--dn-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-fg-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.dn-ruler:last-child {
+  border-bottom: 0;
+}
+
+.dn-ruler-gain {
+  color: var(--color-accent);
+}
+
+/* --- 03, the offset review column --- */
+
+.dn-review {
+  display: grid;
+  gap: 22px;
+}
+
+@media (min-width: 860px) {
+  .dn-review {
+    grid-template-columns: 190px minmax(0, 62ch);
+    gap: 64px;
+    justify-content: center;
+  }
+
+  /* The rail hangs in the margin the body vacated, and stays put while the
+     review scrolls, so the rating is readable at any point in a long piece
+     instead of only at the top. */
+  .dn-review-rail {
+    position: sticky;
+    top: 96px;
+    align-self: start;
+    text-align: right;
+  }
+}
+
+/* The specimen renders through the real ReviewBody component, so it picks up
+   .review-body from globals.css and the drop cap and floats come with it. That
+   is the point: the offset is the only variable being changed. */
+
+
+/* --- 05, the taxonomy table --- */
+
+.dn-table {
+  display: grid;
+  gap: 0;
+}
+
+.dn-table-row {
+  display: grid;
+  gap: 4px 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-row);
+}
+
+@media (min-width: 860px) {
+  .dn-table-row {
+    grid-template-columns: 150px minmax(0, 1fr) 128px;
+    align-items: baseline;
+    gap: 24px;
+  }
+}
+
+.dn-table-row:last-child {
+  border-bottom: 0;
+}
+
+.dn-verdict-yes {
+  color: var(--color-accent);
+}
+
+/* --- 06, scroll as a scrubber ---
+ * The mechanism is a track taller than the box that holds it, plus a frame
+ * pinned to the top of that box. Sticky resolves against the nearest
+ * scrolling ancestor, so keeping the overflow here rather than on the page
+ * gives thewatch.60fps.fr's 39 screens of budget inside 440px.
+ */
+
+.dn-scrub {
+  position: relative;
+  height: 440px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--color-hairline);
+  border-radius: 3px;
+  background: var(--color-ink);
+}
+
+.dn-scrub-track {
+  height: 320%;
+}
+
+.dn-scrub-frame {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  height: 440px;
+  padding: 0 34px;
+}
+
+.dn-scrub-art {
+  position: relative;
+  flex: none;
+  width: 150px;
+  aspect-ratio: 3 / 4;
+}
+
+.dn-scrub-layer {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.45s ease;
+}
+
+.dn-scrub-caption {
+  min-width: 0;
+}
+
+.dn-scrub-rule {
+  margin-top: 18px;
+  height: 1px;
+  background: var(--color-rule);
+}
+
+.dn-scrub-rule span {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+  transform-origin: left;
+}
+
+@media (max-width: 640px) {
+  .dn-scrub-frame {
+    gap: 22px;
+    padding: 0 20px;
+  }
+
+  .dn-scrub-art {
+    width: 104px;
+  }
+}
+
+/* --- 07, un-crop on entry ---
+ * The picture is not moved or scaled. Only the window over it widens, which
+ * is why it reads as a shutter rather than as a slide.
+ */
+
+.dn-uncrop {
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+.dn-uncrop img {
+  display: block;
+  width: 100%;
+  height: auto;
+  clip-path: inset(0 34% round 3px);
+  transition: clip-path 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.dn-uncrop.is-open img {
+  clip-path: inset(0 0 round 3px);
+}
+
+/* --- 06, the entry cue ---
+   A framed stand-in for a viewport, so the corner anchoring is visible
+   without having to leave the page and look at the real hero. */
+
+.dn-viewport {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  min-height: 300px;
+  border: 1px solid var(--color-rule);
+  border-radius: 3px;
+  background: var(--color-ink);
+  overflow: hidden;
+}
+
+.dn-hud {
+  position: absolute;
+  font-family: var(--font-sans);
+  font-size: var(--dn-micro);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-fg-faint);
+}
+
+.dn-hud-tl {
+  top: 18px;
+  left: 20px;
+}
+
+.dn-hud-tr {
+  top: 18px;
+  right: 20px;
+}
+
+.dn-hud-bl {
+  bottom: 18px;
+  left: 20px;
+}
+
+.dn-hud-br {
+  bottom: 18px;
+  right: 20px;
+  color: var(--color-accent);
+}
+
+.dn-hud-arrow {
+  display: inline-block;
+  animation: dn-nudge 2.6s ease-in-out infinite;
+}
+
+@keyframes dn-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+/* --- 07, the density toggle --- */
+
+.dn-switch {
+  display: inline-flex;
+  border: 1px solid var(--color-hairline);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.dn-switch button {
+  padding: 7px 14px;
+  font-family: var(--font-sans);
+  font-size: var(--dn-micro);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-fg-dim);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.dn-switch button + button {
+  border-left: 1px solid var(--color-hairline);
+}
+
+.dn-switch button:hover {
+  color: var(--color-fg);
+}
+
+.dn-switch button[aria-pressed="true"] {
+  background: var(--color-row);
+  color: var(--color-accent);
+}
+
+.dn-grid {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 700px) {
+  .dn-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .dn-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.dn-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--color-row);
+}
+
+/* 768px, not 760, so this agrees exactly with Tailwind's md: on the children.
+   Any daylight between the two leaves more visible cells than there are
+   columns, and the overflow wraps onto a row of its own. */
+@media (min-width: 768px) {
+  .dn-row {
+    grid-template-columns: 96px minmax(0, 1fr) minmax(0, 108px) 84px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dn-hud-arrow {
+    animation: none;
+  }
+
+  /* The scrubber itself stays: it moves only when the reader moves it, which
+     is not the kind of motion this setting is asking to be spared. Only the
+     cross-fade between covers is dropped. */
+  .dn-scrub-layer,
+  .dn-uncrop img {
+    transition: none;
+  }
+}

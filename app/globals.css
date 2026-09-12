@@ -595,19 +595,11 @@ html:has(.panel) {
      is deliberately left on instant scrolling. */
   scroll-behavior: auto;
   /*
-   * Proximity, not mandatory.
-   *
-   * Mandatory means every rest position has to be a snap point, which is right
-   * for the screen-sized panels and wrong for everything after them. The index
-   * is long content, not a panel: snapped hard to its start, one wheel gesture
-   * cleared the whole filter header, and the footer sat past the last snap
-   * point where the scroll could never come to rest, so it was unreachable.
-   *
-   * Proximity keeps the beat, because a panel still pulls the scroll in when
-   * you come near it and scroll-snap-stop below still refuses to let you skip
-   * one, while anything taller than a screen scrolls like normal content.
+   * Mandatory, deliberately. Proximity was tried and is not the same thing:
+   * Chrome's threshold is tight enough that the panels effectively stopped
+   * snapping, which is the whole beat of the landing page.
    */
-  scroll-snap-type: y proximity;
+  scroll-snap-type: y mandatory;
 }
 
 html:has(.panel) .panel {
@@ -616,12 +608,18 @@ html:has(.panel) .panel {
 }
 
 /*
- * The index is where the panels stop. It carries .panel for the layout it
- * shares with them, but it is a long list and must not behave like a screen.
+ * The footer needs a snap point of its own.
+ *
+ * It is not a panel, so under mandatory snapping it sat past the last snap
+ * point with nowhere for the scroll to come to rest, and was unreachable. The
+ * index above it is taller than the viewport, which browsers let you scroll
+ * through freely, so the only thing missing was somewhere to land at the end.
+ * Aligned to its end rather than its start, because the footer is shorter than
+ * a screen and should settle at the bottom of the page rather than pull itself
+ * up to the top of one.
  */
-html:has(.panel) #all-reviews {
-  scroll-snap-align: none;
-  scroll-snap-stop: normal;
+html:has(.panel) footer {
+  scroll-snap-align: end;
 }
 
 /*
@@ -839,8 +837,13 @@ html:has(.panel) #all-reviews {
 }
 
 @media (min-width: 1024px) {
+  /* 190 rail + 64 + 680 measure + 64 + 190 balancing track. The cap used to
+     stop at 934px, which was the two track total; once a third track was added
+     to centre the measure, the container was narrower than its own grid and the
+     only thing that could give was the writing, which collapsed to about 420px.
+     The two 190px tracks are fixed, so the cap has to carry them. */
   .review-page {
-    max-width: 934px; /* 190 rail + 64 gutter + 680 measure */
+    max-width: 1188px;
   }
 
   /*

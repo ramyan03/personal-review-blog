@@ -2,6 +2,7 @@ import {
   DocumentRenderer,
   type DocumentRendererProps,
 } from "@keystatic/core/renderer";
+import UncropImage from "@/components/uncrop-image";
 import type { Dimensions } from "@/lib/artwork";
 
 type Doc = DocumentRendererProps["document"];
@@ -50,9 +51,13 @@ export default function ReviewBody({
               const size = sizes.get(src);
               const isLead = src === lead;
 
+              // The topmost picture opens on entry; the rest are floated into
+              // the text, where a shutter would read as a glitch.
+              const Tag = isLead ? UncropImage : "img";
+
               return (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Tag
                   src={src}
                   alt={alt}
                   width={size?.width}
