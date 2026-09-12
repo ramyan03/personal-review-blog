@@ -9,6 +9,7 @@ import Stars, { formatRating } from "@/components/stars";
 import { ArrowLeftIcon } from "@/components/icons";
 import { reader } from "@/lib/reader";
 import { byline, formatDate } from "@/lib/format";
+import { readsUrl } from "@/lib/reads";
 import { getReview, getReviews } from "@/lib/reviews";
 import { REVIEWS_HREF } from "@/lib/links";
 import { SITE_NAME } from "@/lib/site";
@@ -62,12 +63,13 @@ export default async function ReviewPage({ params }: Params) {
   if (!review) notFound();
 
   const [all, sizes] = await Promise.all([getReviews(), artworkDimensions()]);
+  const readsHref = readsUrl(slug);
   const index = all.findIndex((item) => item.slug === slug);
   const newer = index > 0 ? all[index - 1] : null;
   const older = index >= 0 && index < all.length - 1 ? all[index + 1] : null;
 
   return (
-    <main className="mx-auto max-w-[680px] px-5 pt-8 pb-24 sm:px-6 lg:pt-12 lg:pb-[140px]">
+    <main className="review-page mx-auto px-5 pt-8 pb-24 sm:px-6 lg:pt-12 lg:pb-[140px]">
       <Link
         href={REVIEWS_HREF}
         className="mb-10 inline-flex items-center gap-2 text-xs tracking-[0.1em] text-fg-soft uppercase transition-colors hover:text-fg lg:mb-14"
@@ -76,6 +78,42 @@ export default async function ReviewPage({ params }: Params) {
         All reviews
       </Link>
 
+      {/*
+        The writing sits right of centre, and the margin it vacates carries a
+        running rail. AI in Design starts its body column at x=533 in a 1272px
+        viewport and leaves the whole left half empty; none of the award sites
+        centre a text column.
+
+        The rail is not a copy of the header beside it. The header is read once
+        on arrival and then scrolled past, so on a long review nothing on
+        screen says any longer what is being reviewed or what it scored. The
+        rail is sticky and says exactly that, which is the argument for moving
+        the column in the first place.
+
+        Below 1024px the rail is not rendered at all rather than stacked: the
+        header has just said all of it, and repeating it immediately underneath
+        on a phone is noise. Everything else keeps the measure it had.
+      */}
+      <div className="review-offset">
+        <aside className="review-rail" aria-hidden="true">
+          <GenreTag genre={review.genre} />
+          <p className="mt-3 mb-0 font-serif text-base leading-[1.3] font-medium text-fg-title">
+            {review.title}
+          </p>
+          {review.rating ? (
+            <div className="mt-3 flex items-center justify-end gap-2">
+              <Stars rating={review.rating} />
+              <span className="text-xs text-fg-faint">
+                {formatRating(review.rating)} / 5
+              </span>
+            </div>
+          ) : null}
+          <p className="mt-3 mb-0 text-xs tracking-[0.14em] text-fg-faint uppercase">
+            {formatDate(review.date)}
+          </p>
+        </aside>
+
+        <div className="review-column">
       {/*
         The artwork leads the review, beside the title rather than above it.
         Every other surface on the site shows a review as its cover, so arriving
@@ -116,6 +154,23 @@ export default async function ReviewPage({ params }: Params) {
               </span>
             </div>
           ) : null}
+
+          {/*
+            Across to the reading list, for books that are on it. Deliberately
+            in the same quiet register as the byline above rather than as a
+            promoted link: it is a fact about this book, not an advert for the
+            other site.
+          */}
+          {readsHref ? (
+            <p className="mt-5">
+              <a
+                href={readsHref}
+                className="border-b border-hairline pb-px text-sm text-fg-muted transition-colors hover:border-accent hover:text-accent"
+              >
+                In my reading list &rarr;
+              </a>
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -145,6 +200,8 @@ export default async function ReviewPage({ params }: Params) {
           <span />
         )}
       </nav>
+        </div>
+      </div>
     </main>
   );
 }

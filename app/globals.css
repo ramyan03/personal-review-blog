@@ -51,14 +51,21 @@
    * text on the site picks one of these, and nothing uses an arbitrary pixel
    * value. The only exceptions are decorative: the oversized initial on a
    * cover and the drop cap on a review, which are drawings, not text.
+   *
+   * The two ends were widened deliberately. The award sites this was measured
+   * against run their largest type at eight to ten times their smallest; this
+   * scale was under seven, which is the difference between looking competent
+   * and looking designed. Only the top two values moved, so nothing in the
+   * reading sizes changed: --text-xs stays the floor and carries the eyebrow
+   * labels, rather than a seventh step being added below it.
    */
-  --text-xs: 12px; /* uppercase micro-labels: nav, pills, buttons, meta */
+  --text-xs: 12px; /* uppercase micro-labels: nav, eyebrows, buttons, meta */
   --text-sm: 14px; /* dates, secondary meta, card excerpts */
   --text-base: 16px; /* card titles, interface prose */
   --text-lg: 19px; /* review body, page intros */
   --text-xl: 28px; /* section headings, page titles on small screens */
-  --text-2xl: 40px; /* page titles */
-  --text-display: clamp(40px, 7vw, 82px); /* the home page headline, only */
+  --text-2xl: 44px; /* page titles */
+  --text-display: clamp(44px, 9.5vw, 132px); /* headlines and genre panels */
 }
 
 :root {
@@ -330,8 +337,9 @@ html {
   opacity: 0.42;
   box-shadow: 0 18px 40px oklch(0 0 0 / 0.45);
   transition:
-    opacity 0.35s ease,
-    scale 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+    opacity 0.4s ease,
+    scale 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+    translate 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .genre-drift-item:hover,
@@ -341,10 +349,13 @@ html {
   outline: none;
 }
 
+/* Lift as well as scale. Scale alone reads as a zoom; the small rise is what
+   makes the held cover feel picked up off the panel rather than magnified. */
 .genre-drift-item:hover img,
 .genre-drift-item:focus-visible img {
   opacity: 1;
-  scale: 1.05;
+  scale: 1.035;
+  translate: 0 -4px;
 }
 
 /*
@@ -358,7 +369,10 @@ html {
 .genre-drift:has(.genre-drift-item:focus-visible)
   .genre-drift-item:not(:focus-visible)
   img {
-  opacity: 0.24;
+  /* Held at two thirds of the resting 0.42 rather than dropped to a quarter of
+     it. The earlier value separated them so hard that the panel emptied around
+     the cursor; the point is a focal point, not a spotlight. */
+  opacity: 0.28;
 }
 
 .genre-drift-item:focus-visible img {
@@ -588,6 +602,78 @@ html:has(.panel) .panel {
   scroll-snap-stop: always;
 }
 
+/*
+ * The counting beat: how much of the site there is, given a screen of its own.
+ * The figures are counted up in components/count-beat.tsx; the stagger behind
+ * them is here, one observer driving all four rather than one each.
+ */
+.count-beat {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+  max-width: 1060px;
+}
+
+@media (min-width: 800px) {
+  .count-beat {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 40px;
+  }
+}
+
+.count-beat-value {
+  display: block;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(56px, 9vw, 108px);
+  line-height: 0.86;
+  letter-spacing: -0.03em;
+  color: var(--color-fg-bright);
+  /* Digits of different widths would make the four tiles jitter as they run. */
+  font-variant-numeric: tabular-nums;
+}
+
+.count-beat-item {
+  opacity: 0;
+  translate: 0 14px;
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+    translate 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.count-beat.is-visible .count-beat-item {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.count-beat-item:nth-child(2) {
+  transition-delay: 0.1s;
+}
+
+.count-beat-item:nth-child(3) {
+  transition-delay: 0.2s;
+}
+
+.count-beat-item:nth-child(4) {
+  transition-delay: 0.3s;
+}
+
+/*
+ * The leading picture on a review, opening on entry. Only the window over the
+ * image widens; the image itself is untouched, which is the difference between
+ * a shutter and a slide. The radius is repeated inside the inset because a
+ * clip-path replaces the border-radius rather than respecting it.
+ */
+.review-body img.uncrop {
+  clip-path: inset(0 32% round 3px);
+  transition: clip-path 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.review-body img.uncrop.is-open {
+  clip-path: inset(0 round 3px);
+}
+
 /* Scroll reveal is driven by an IntersectionObserver toggling .is-visible. */
 .reveal {
   opacity: 0;
@@ -641,10 +727,129 @@ html:has(.panel) .panel {
     animation: none;
   }
 
+  .count-beat-item {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .review-body img.uncrop {
+    transition: none;
+  }
+
   .genre-drift-item {
     opacity: 1;
     translate: 0 0;
     scale: 1;
+  }
+}
+
+/* --- The index, at two densities --- */
+
+.index-switch {
+  display: inline-flex;
+  border: 1px solid var(--color-hairline);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.index-switch button {
+  padding: 5px 11px;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-fg-dim);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.index-switch button + button {
+  border-left: 1px solid var(--color-hairline);
+}
+
+.index-switch button:hover {
+  color: var(--color-fg);
+}
+
+.index-switch button[aria-pressed="true"] {
+  background: var(--color-row);
+  color: var(--color-accent);
+}
+
+.index-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--color-row);
+}
+
+/* 768px, so this agrees exactly with Tailwind's md: on the cells inside. Any
+   daylight between the two leaves more visible cells than there are columns,
+   and the overflow wraps onto a row of its own. */
+@media (min-width: 768px) {
+  .index-row {
+    grid-template-columns: 96px minmax(0, 1fr) minmax(0, 200px) 108px;
+    gap: 24px;
+  }
+}
+
+/* --- Review page layout ---
+ *
+ * The measure is unchanged at 680px. What moved is where that column sits:
+ * a rail is set beside it and the pair is centred together, so the writing
+ * lands right of the middle of the screen and the space on the left is doing
+ * something instead of being margin.
+ *
+ * The page is one column until 1024px. There is no room for a rail before
+ * that, and the header at the top of the review has just said everything the
+ * rail would say.
+ */
+
+.review-page {
+  width: 100%;
+  max-width: 680px;
+}
+
+@media (min-width: 1024px) {
+  .review-page {
+    max-width: 934px; /* 190 rail + 64 gutter + 680 measure */
+  }
+
+  .review-offset {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 680px);
+    gap: 64px;
+  }
+}
+
+.review-column {
+  min-width: 0;
+}
+
+.review-rail {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .review-rail {
+    display: block;
+    position: sticky;
+    /* Clears the sticky header, which is 65px on this route plus a little air. */
+    top: 96px;
+    align-self: start;
+    text-align: right;
+  }
+
+  /* Ranged right, so the rail reads against the gutter and the eye has a
+     single edge running down between it and the writing. */
+  .review-rail > * {
+    justify-content: flex-end;
   }
 }
 
@@ -901,4 +1106,63 @@ html:has(.panel) .panel {
 
 :root[data-theme="dark"] .theme-icon-dark {
   display: none;
+}
+
+/* ==========================================================================
+   The index, as a contact sheet
+   ========================================================================== */
+
+/*
+ * The index used to be the one place the site stopped looking like itself: a
+ * grid of bordered cards, each with a date and a rule under it, which is what
+ * every review site has. The border and the date are gone from the markup; what
+ * is left here is the focus behaviour, which is deliberately the same move the
+ * genre panels make with their drifting covers. Hold one entry and its
+ * neighbours recede, so a long index still reads as a shelf being looked along
+ * rather than a page of results.
+ *
+ * Only opacity and transform, so this stays on the compositor, and :has() keeps
+ * it in CSS rather than tracking a hovered index in React.
+ */
+.index-entry-art {
+  transition:
+    scale 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+    translate 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.index-entry:hover .index-entry-art,
+.index-entry:focus-visible .index-entry-art {
+  scale: 1.025;
+  translate: 0 -4px;
+}
+
+.index-grid .index-entry {
+  transition: opacity 0.4s ease;
+}
+
+.index-grid:has(.index-entry:hover) .index-entry:not(:hover),
+.index-grid:has(.index-entry:focus-visible) .index-entry:not(:focus-visible) {
+  opacity: 0.62;
+}
+
+.index-entry:focus-visible {
+  outline: none;
+}
+
+.index-entry:focus-visible .index-entry-art {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Touch has no hover to recede from, and a held state that never lifts reads as
+   a bug. The grid stays flat and the tap target does the work instead. */
+@media (hover: none) {
+  .index-grid:has(.index-entry:hover) .index-entry:not(:hover) {
+    opacity: 1;
+  }
+
+  .index-entry:hover .index-entry-art {
+    scale: 1;
+    translate: 0 0;
+  }
 }

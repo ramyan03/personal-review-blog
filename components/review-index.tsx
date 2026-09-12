@@ -14,6 +14,9 @@ import { useSlidingRule } from "@/lib/use-sliding-rule";
 
 type GenreFilter = Genre | "All";
 type Sort = "newest" | "oldest" | "rating";
+type Density = "grid" | "list";
+
+const DENSITY_KEY = "review-index-density";
 
 const SORTS: { value: Sort; label: string }[] = [
   { value: "newest", label: "Newest" },
@@ -40,6 +43,42 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
   const [query, setQuery] = useState("");
   const [minRating, setMinRating] = useState(0);
   const [sort, setSort] = useState<Sort>("newest");
+
+  /*
+   * Grid or list, remembered per reader.
+   *
+   * Michael Gatt keeps INDEX VIEW available in the middle of a 3D field, and
+   * Gionatan Nese numbers three arrangements of the same thumbnails; neither
+   * makes you choose once between an atmospheric browse and a scannable one.
+   *
+   * There is a practical reason to want it here too. Three columns of artwork
+   * run about a third taller than the four column layout they replaced, so on
+   * a laptop the index no longer fits on a screen. The list is the version
+   * that does.
+   *
+   * Read after mount rather than during render: the server cannot know which
+   * way this reader left it, and guessing would hydrate wrong.
+   */
+  const [density, setDensity] = useState<Density>("grid");
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(DENSITY_KEY);
+      if (saved === "grid" || saved === "list") setDensity(saved);
+    } catch {
+      // Private windows and blocked site data both throw on access, and the
+      // default is a perfectly good answer.
+    }
+  }, []);
+
+  const chooseDensity = (next: Density) => {
+    setDensity(next);
+    try {
+      window.localStorage.setItem(DENSITY_KEY, next);
+    } catch {
+      // Remembering is a convenience, not a requirement.
+    }
+  };
 
   useEffect(() => {
     const wanted = params.get("genre");
@@ -172,6 +211,25 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
             onChange={(value) => setSort(value as Sort)}
             options={anyRated ? SORTS : SORTS.filter((s) => s.value !== "rating")}
           />
+
+          <div className="h-4 w-px bg-hairline" />
+
+          <div className="index-switch" role="group" aria-label="Index density">
+            <button
+              type="button"
+              aria-pressed={density === "grid"}
+              onClick={() => chooseDensity("grid")}
+            >
+              Grid
+            </button>
+            <button
+              type="button"
+              aria-pressed={density === "list"}
+              onClick={() => chooseDensity("list")}
+            >
+              List
+            </button>
+          </div>
         </div>
       </div>
 
@@ -196,11 +254,19 @@ export default function ReviewIndex({ reviews }: { reviews: Review[] }) {
           enough to be looked at, which is the point of a shelf of artwork.
         */}
         {full.length > 0 ? (
-          <div className="grid grid-cols-1 sm:mt-8 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-12 md:grid-cols-3 lg:gap-x-10 lg:gap-y-14">
-            {full.map((review) => (
-              <ReviewCard key={review.slug} review={review} />
-            ))}
-          </div>
+          density === "grid" ? (
+            <div className="index-grid mt-8 grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-16 md:grid-cols-3 lg:gap-x-14 lg:gap-y-20">
+              {full.map((review) => (
+                <ReviewCard key={review.slug} review={review} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-6">
+              {full.map((review) => (
+                <IndexRow key={review.slug} review={review} />
+              ))}
+            </div>
+          )
         ) : null}
 
         {shorts.length > 0 ? (
@@ -305,6 +371,51 @@ function FeaturedReview({ review, flip }: { review: Review; flip: boolean }) {
         </Link>
       </div>
     </article>
+  );
+}
+
+/**
+ * One review as a row, for the list density.
+ *
+ * Every breakpoint here is md, matching the 768px in .index-row. Written with
+ * sm the columns appeared at 640 while the grid was still two wide, and the
+ * two extra cells wrapped onto a line of their own and collided with the row
+ * below.
+ *
+ * The subject is clamped inside its own element rather than on the element
+ * that hides it. line-clamp works by setting display to -webkit-box, so
+ * `hidden md:block` on the same node replaces that with block and switches the
+ * clamp off, and a long subject then overflows its track onto the rating.
+ */
+function IndexRow({ review }: { review: Review }) {
+  return (
+    <Link href={`/reviews/${review.slug}`} className="index-row group">
+      <div className="hidden md:block">
+        <GenreTag genre={review.genre} />
+      </div>
+
+      <div className="min-w-0">
+        <h3 className="m-0 line-clamp-1 font-serif text-base leading-[1.35] font-medium text-fg-title transition-colors group-hover:text-accent">
+          {review.title}
+        </h3>
+        <span className="line-clamp-1 text-sm text-fg-faint md:hidden">
+          {review.subject}
+        </span>
+      </div>
+
+      <div className="hidden min-w-0 md:block">
+        <span className="line-clamp-1 text-sm text-fg-muted">
+          {review.subject}
+        </span>
+      </div>
+
+      <div className="flex items-center justify-end gap-3">
+        {review.rating ? <Stars rating={review.rating} /> : null}
+        <span className="hidden text-xs whitespace-nowrap text-fg-faint lg:inline">
+          {formatDate(review.date)}
+        </span>
+      </div>
+    </Link>
   );
 }
 
