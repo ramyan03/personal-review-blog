@@ -69,6 +69,35 @@ export default config({
             publicPath: "/posters/",
           },
         }),
+
+        /*
+         * Comments, as content rather than as a service.
+         *
+         * There is no backend here and there does not need to be one: at the
+         * rate these actually arrive, a database, its moderation and its spam
+         * would all be machinery for a handful of paragraphs a year. They are
+         * typed in like everything else, ship in the static build, and cannot
+         * be spammed because there is nothing to post to.
+         */
+        comments: fields.array(
+          fields.object({
+            name: fields.text({
+              label: "Name",
+              validation: { isRequired: true },
+            }),
+            date: fields.date({ label: "Date" }),
+            text: fields.text({
+              label: "Comment",
+              multiline: true,
+              validation: { isRequired: true },
+            }),
+          }),
+          {
+            label: "Comments",
+            description: "Added by hand as they come in",
+            itemLabel: (props) => props.fields.name.value || "Comment",
+          },
+        ),
       },
     }),
   },
