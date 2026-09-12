@@ -7,7 +7,6 @@ import GenreTag from "@/components/genre-tag";
 import MoreInGenre from "@/components/more-in-genre";
 import Stars, { formatRating } from "@/components/stars";
 import BackToIndex from "@/components/back-to-index";
-import ReviewComments from "@/components/review-comments";
 import { reader } from "@/lib/reader";
 import { byline, formatDate } from "@/lib/format";
 import { readsUrl } from "@/lib/reads";
@@ -170,8 +169,6 @@ export default async function ReviewPage({ params }: Params) {
       </div>
 
       <ReviewBody document={review.body} sizes={sizes} />
-
-      <ReviewComments slug={slug} comments={review.comments} />
 
       <MoreInGenre genre={review.genre} currentSlug={slug} reviews={all} />
 

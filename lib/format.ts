@@ -17,17 +17,6 @@ export type Review = {
   short: boolean;
 };
 
-/**
- * A comment, typed in by hand in /keystatic and shipped in the static build.
- * There is no posting endpoint, which is the whole point: at the rate these
- * arrive, a backend would be more moving parts than content.
- */
-export type Comment = {
-  name: string;
-  date: string;
-  text: string;
-};
-
 /** "Sep 2, 2026", parsed as a plain date so it never shifts with the timezone. */
 export function formatDate(date: string): string {
   if (!date) return "";

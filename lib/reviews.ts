@@ -70,11 +70,6 @@ export async function getReview(slug: string) {
     date: entry.date ?? "",
     excerpt: entry.excerpt,
     short: countWords(body as unknown as DocumentNode[]) <= SHORT_TAKE_WORDS,
-    comments: (entry.comments ?? []).map((c) => ({
-      name: c.name,
-      date: c.date ?? '',
-      text: c.text,
-    })),
     body,
   };
 }
